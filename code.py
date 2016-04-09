@@ -15,6 +15,7 @@ class GameManager:
     def draw(self):
     	pygame.draw.rect(self.screen, self.colors['blue'], (self.cart.x, self.cart.y, self.cart.x+100, self.cart.y+100))
 
+    # All the physics code will be added here
     def update(self):
         self.cart = self.cart + Vector2(1, 1)
 
