@@ -1,19 +1,24 @@
 import pygame
 
-def main():
-    pygame.init()
+class NoGameNoLife():
 
-    DISPLAY=pygame.display.set_mode((500,400),0,32)
+    def __init__(self):
+        pygame.init()
 
-    WHITE=(255,255,255)
-    blue=(0,0,255)
+        DISPLAY=pygame.display.set_mode((500,400),0,32)
 
-    DISPLAY.fill(WHITE)
+        WHITE=(255,255,255)
+        blue=(0,0,255)
 
-    pygame.draw.rect(DISPLAY,blue,(200,150,100,50))
+        DISPLAY.fill(WHITE)
 
-    while True:
-        pygame.display.update()
+        pygame.draw.rect(DISPLAY,blue,(200,150,100,50))
+
+        while True:
+            pygame.display.update()
+
+    def update(self):
+        pass
 
 if __name__ == "__main__":
-    main()
+    game = NoGameNoLife()
