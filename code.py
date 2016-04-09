@@ -11,12 +11,13 @@ class GameManager:
 
         # Define the cart variables here
         self.cart = Vector2(500,100)
+        self.cart_size = Vector2(50, 10)
         self.ball = Vector2(100, 100)
 
     def draw(self):
         pygame.draw.circle(self.screen, self.colors['blue'], (int(self.ball.x), int(self.ball.y)), 10)
-    	pygame.draw.rect(self.screen, self.colors['red'], (self.cart.x, self.cart.y, 100, 20))
-        pygame.draw.line(self.screen, self.colors['blue'], (self.cart.x, self.cart.y), (self.ball.x, self.ball.y))
+    	pygame.draw.rect(self.screen, self.colors['red'], (self.cart.x, self.cart.y, 50, 10))
+        pygame.draw.line(self.screen, self.colors['blue'], self.cart + self.cart_size/2, self.ball)
 
     # All the physics code will be added here
     def update(self):
