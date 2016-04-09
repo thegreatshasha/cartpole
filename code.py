@@ -1,24 +1,37 @@
 import pygame
+from pygame.math import Vector2
 
-class NoGameNoLife():
-
+class GameManager:
     def __init__(self):
-        pygame.init()
+    	pygame.init()
+    	self.size = (500, 500)
+    	self.screen = pygame.display.set_mode(self.size)
 
-        DISPLAY=pygame.display.set_mode((500,400),0,32)
+        self.colors = {'WHITE':(255,255,255), 'blue': (0,0,255), 'black': (0,0,0)}
 
-        WHITE=(255,255,255)
-        blue=(0,0,255)
+        # Define the cart variables here
+        self.cart = Vector2(0,0)
 
-        DISPLAY.fill(WHITE)
-
-        pygame.draw.rect(DISPLAY,blue,(200,150,100,50))
-
-        while True:
-            pygame.display.update()
+    def draw(self):
+    	pygame.draw.rect(self.screen, self.colors['blue'], (self.cart.x, self.cart.y, self.cart.x+100, self.cart.y+100))
 
     def update(self):
-        pass
+        self.cart = self.cart + Vector2(1, 1)
+
+    def run(self):
+        self.screen.fill(self.colors['black'])
+
+    	reward = self.update()
+
+    	self.draw()
+
+    	pygame.display.flip()
+
+def main():
+    gm = GameManager()
+
+    for i in range(10000):
+        gm.run()
 
 if __name__ == "__main__":
-    game = NoGameNoLife()
+    main()
