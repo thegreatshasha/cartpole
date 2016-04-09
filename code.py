@@ -5,6 +5,7 @@ class GameManager:
     def __init__(self):
     	pygame.init()
     	self.size = (1024, 768)
+        self.size_vec = Vector2(1024, 768)
     	self.screen = pygame.display.set_mode(self.size)
 
         self.colors = {'WHITE':(255,255,255), 'red': (255,0,0), 'blue': (0,0,255), 'black': (0,0,0)}
@@ -27,8 +28,8 @@ class GameManager:
 
     # All the physics code will be added here
     def update(self):
-        self.cart = self.cart + self.cart_v
-        self.ball = self.ball + self.ball_v
+        self.cart = (self.cart + self.cart_v) % self.size_vec
+        self.ball = (self.ball + self.ball_v) % self.size_vec
 
         self.cart_v = self.cart_v + self.cart_a
         self.ball_v = self.ball_v + self.ball_a
