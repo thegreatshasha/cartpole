@@ -81,8 +81,8 @@ class GameManager:
         self.ball_theta=y[0][0]%(2*m.pi)
         self.ball_omega=y[1][0]
         #update v,a
-        self.peg_v=y_peg[0][0]
-        self.peg_a=y_peg[1][0]
+        self.peg=Vector2(y_peg[0][0]%(self.size_vec.x),self.peg.y)
+        self.peg_v=y_peg[1][0]
         
         #add our input to the sytem: accel->alpha(accel,theta)
         self.peg_a=accel 
@@ -100,7 +100,7 @@ class GameManager:
         self.screen.fill(self.colors['black'])
         self.draw()
         pygame.display.flip()
-        reward = self.update(0.0)
+        reward = self.update(50.0)
 
 def main():
     gm = GameManager()
