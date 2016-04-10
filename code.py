@@ -11,6 +11,7 @@ class GameManager:
         #display attributes
         self.clock = pygame.time.Clock()
         pygame.init()
+        self.font=pygame.font.Font(None,30)
     	self.size = (1024, 768)
         self.size_vec = Vector2(1024, 768)
     	self.screen = pygame.display.set_mode(self.size)
@@ -28,8 +29,13 @@ class GameManager:
         #initial state: config
         self.ball_theta=m.pi/2#[0,2*pi]
         self.ball_omega=0.0
-
         self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)
+
+        self.ball_theta_min = 10000
+        self.ball_theta_max = -10000
+
+        self.ball_omega_min = 10000
+        self.ball_omega_max = -10000
 
         self.ball=Vector2(self.polar_cart())
         #self.ball(x,y)
@@ -50,15 +56,29 @@ class GameManager:
         y=int(self.peg.y-self.ball_length*m.cos(self.ball_theta))
         return x,y
 
+    def calculate_min_max(self):
+        self.ball_theta_min = min(self.ball_theta_min, self.ball_theta)
+        self.ball_theta_max = max(self.ball_theta_max, self.ball_theta)
+
+        self.ball_omega_min = min(self.ball_omega_min, self.ball_omega)
+        self.ball_omega_max = max(self.ball_omega_max, self.ball_omega)
+
+    def draw_texts(self):
+        scoretext=self.font.render("Theta: %f[%f-%f], Omega: %f[%f-%f], Alpha: %f" % (self.ball_theta, self.ball_theta_min, self.ball_theta_max, self.ball_omega, self.ball_omega_min, self.ball_omega_max, self.ball_alpha), 1,(255,255,255))
+        self.screen.blit(scoretext, (0, 457))
+
     def draw(self):
         pygame.draw.circle(self.screen, self.colors['blue'], (int(self.peg.x), int(self.peg.y)), 10)
         pygame.draw.circle(self.screen, self.colors['blue'], self.ball, 5)
         pygame.draw.line(self.screen, self.colors['blue'], self.peg, self.ball)
-        """
-        pygame.draw.circle(self.screen, self.colors['blue'], (int(self.ball.x), int(self.ball.y)), 10)
-        pygame.draw.rect(self.screen, self.colors['red'], (self.cart.x, self.cart.y, 50, 10))
-        pygame.draw.line(self.screen, self.colors['blue'], self.cart + self.cart_size/2, self.ball)
-        """
+
+        self.draw_texts()
+
+    # def states(self):
+    #     return {'theta': self.ball_theta, 'omega':self.ball_omega, 'alpha': self.ball_alpha}
+    #
+    # def states_range(self):
+    #     return {'theta': (), 'omega': (), 'alpha': ()}
 
     def choose_force(self):
         # This will be done by the agent
@@ -79,6 +99,8 @@ class GameManager:
         self.ball_omega=y[1][0]
         self.apply_force(self.g + self.choose_force())
         self.ball=Vector2(self.polar_cart())
+
+        self.calculate_min_max()
         """
         self.cart = (self.cart + self.cart_v) % self.size_vec
         self.ball = (self.ball + self.ball_v) % self.size_vec
@@ -88,8 +110,8 @@ class GameManager:
         """
     def run(self):
         self.screen.fill(self.colors['black'])
-        self.draw()
         self.update()
+        self.draw()
 
 def main():
     gm = GameManager()
