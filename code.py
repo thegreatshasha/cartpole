@@ -41,7 +41,7 @@ class GameManager:
         self.ball=Vector2(self.polar_cart())
         #self.ball(x,y)
 
-        self.player = QAgent()
+        self.player = QAgent(self.get_state_range(), self.get_action_range())
 
     def polar_cart(self):
         x=int(self.peg.x-self.ball_length*m.sin(self.ball_theta))
@@ -67,13 +67,15 @@ class GameManager:
         self.draw_texts()
 
     def get_state(self):
-        return {'theta': self.ball_theta, 'omega':self.ball_omega}
+        return [self.ball_theta, self.ball_omega]
 
-    def get_state_range(self):
-        return {'theta': (0, m.pi*2), 'omega': (-10, 10)}
+    def get_state_ranges(self):
+        # Returns theta and omega range of states
+        return [np.arange(0, m.pi*2, m.pi/16), np.arange(-10, 10, 1)]
 
     def action_range(self):
-        return {'force': (-10*self.g, 10*self.g)}
+        # Returns action range of values
+        return np.arange(-10*self.g, 10*self.g, 1)
 
     def choose_force(self, state):
         # This will be done by the agent
@@ -86,7 +88,7 @@ class GameManager:
         return self.ball_alpha
 
     # All the physics code will be added here
-    def update(self):
+    def update(self, action):
         #higher order terms removed
         dt=0.0001
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
@@ -102,21 +104,15 @@ class GameManager:
 
         self.ball=Vector2(self.polar_cart())
 
-        self.calculate_min_max()
-        """
-        self.cart = (self.cart + self.cart_v) % self.size_vec
-        self.ball = (self.ball + self.ball_v) % self.size_vec
+        #self.calculate_min_max()
 
-        self.cart_v = self.cart_v + self.cart_a
-        self.ball_v = self.ball_v + self.ball_a
-        """
     def run(self):
         self.screen.fill(self.colors['black'])
         current_state = self.get_state()
-        action = self.choose_force(current_state)
-        self.update()
-        next_state = self.get_state()
-        reward = self.player.get_reward(next_state, action)
+        action = self.choose_force(current_state) # Find the best possible action for current state
+        self.update(action) # Execute that action
+        next_state = self.get_state() # Get next state
+        reward = self.player.get_reward(prev_state, next_state, action)
         self.player.update_Qvalue(current_state, action, next_state, reward)
         self.draw()
 

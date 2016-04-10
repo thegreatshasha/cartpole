@@ -1,15 +1,26 @@
 import numpy as np
 import random
+import math.pi as m
 
 class QAgent:
-    def __init__(self):
-        self.epsilon = float(epsilon) #Greedy
-        self.gamma = float(gamma) #Discount factor
-        self.action_bins = 10
-        self.force = 100
-        self.actions = np.arange(-self.force, self.force, action_bins)
-        self.delta_theta = 10
-        self.Qvalues = {}
+    def __init__(self, state_range, action_range):
+        self.epsilon = 0.5 #Greedy
+        self.gamma = 0.5 #Discount factor
+        self.state_ranges = state_ranges
+        self.actions = action_range
+        qval_dim = [dim.shape[0] for dim in self.state_ranges] + [self.actions.shape[0]]
+        self.Qvalues = np.random.randn()
+
+    def get_state(self, state):
+        # Returns 1d array for q value correponding to
+        state_inds = [np.digitize(dim)-1 for dim in state]
+        return self.Qvalues[state_inds]
+
+    def set_state(self, state, action_index, value):
+
+
+    def get_action(self):
+        
 
     def update_Qvalue(self, pstate, action, state, reward):
         max_qvalue = max([self.get_Qvalue(self, state, a) for a in self.actions])
@@ -41,26 +52,7 @@ class QAgent:
         return self.Qvalues.get((str(state), str(action)), 0.0)
 
     def get_actions(self):
-      return self.actions
+        return self.actions
 
-    def get_reward(self, state, action):
-      violate = self.failure(state)
-      if violate == True:
-        return -10
-      else:
-        return 1
-
-    def failure(self, state):
-      temp = False
-      """
-      state = [theta, omega, alpha]
-      Just assuming for now that theta has to be within a tolerance band.
-      Later can add constraints on each state variable.
-      """
-      angle, vel, alpha = state[0], state[1], state[2]
-      temp = ((angle < -self.delta_theta) or (angle > self.delta_theta))
-
-      if temp == True:
-        return True
-      else:
-        return False
+    def get_reward(self, prev_state, next_state, action):
+        return
