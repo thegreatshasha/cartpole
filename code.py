@@ -18,7 +18,10 @@ class GameManager:
         self.g=980.0#cm/sec^2
 
         #peg-att
+        #initial state: config
         self.peg=Vector2(512.0,100.0)
+        self.peg_v=0.0
+        self.peg_a=0.0
         
         #ball-att
         self.ball_length=100.0
@@ -26,9 +29,10 @@ class GameManager:
         #initial state: config
         self.ball_theta=m.pi/2#[0,2*pi]
         self.ball_omega=0.0
+
         
 
-        self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)
+        self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)+self.peg_a/self.ball_length*m.cos(self.ball_theta)
         
         self.ball=Vector2(self.polar_cart())
         #self.ball(x,y)
@@ -59,15 +63,31 @@ class GameManager:
         pygame.draw.line(self.screen, self.colors['blue'], self.cart + self.cart_size/2, self.ball)
         """
     # All the physics code will be added here
-    def update(self):
+    def update(self,accel):
         #higher order terms removed
-        dt=0.01
+        #alpha,accel fixed for this timestep->end of dt update alpha,accel
+        dt=0.005
+        #define states at the current timestep
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
-        F=np.array([[1,dt,0],[0,1,dt],[0,0,1]])
+        x_peg=np.array([[self.peg.x],[self.peg_v],[self.peg_a]])
+        
+        #states at end of current time step->update
+        F=np.array([[1,dt,dt**2.0/2],[0,1,dt],[0,0,1]])
         y=np.dot(F,x)
+        y_peg=np.dot(F,x_peg)
+
+
+        #update theta and omega
         self.ball_theta=y[0][0]%(2*m.pi)
-        self.ball_omega=y[1][0] 
-        self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)
+        self.ball_omega=y[1][0]
+        #update v,a
+        self.peg_v=y_peg[0][0]
+        self.peg_a=y_peg[1][0]
+        
+        #add our input to the sytem: accel->alpha(accel,theta)
+        self.peg_a=accel 
+        self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)+self.peg_a/self.ball_length*m.cos(self.ball_theta)
+        
         self.ball=Vector2(self.polar_cart())
         """
         self.cart = (self.cart + self.cart_v) % self.size_vec
@@ -80,7 +100,7 @@ class GameManager:
         self.screen.fill(self.colors['black'])
         self.draw()
         pygame.display.flip()
-        reward = self.update()
+        reward = self.update(0.0)
 
 def main():
     gm = GameManager()
