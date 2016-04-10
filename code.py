@@ -2,7 +2,11 @@ import pygame
 from vec2d import Vec2d as Vector2
 import math as m
 import numpy as np
+
 from pid import Pid
+
+from qlearningAgent import QLearningAgent
+
 
 class GameManager:
     
