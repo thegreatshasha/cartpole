@@ -3,6 +3,7 @@ from vec2d import Vec2d as Vector2
 import math as m
 import numpy as np
 import random
+from qlearningAgent import QAgent
 
 class GameManager:
 
@@ -74,22 +75,25 @@ class GameManager:
 
         self.draw_texts()
 
-    def states(self):
+    def get_state(self):
         return {'theta': self.ball_theta, 'omega':self.ball_omega}
 
-    def states_range(self):
+    def get_state_range(self):
         return {'theta': (0, m.pi*2), 'omega': (-10, 10)}
 
-    def actions_range(self):
+    def action_range(self):
         return {'force': (-10*self.g, 10*self.g)}
 
-    def choose_force(self):
+    def choose_force(self, state):
         # This will be done by the agent
-        return random.choice([10000, -10000])
+        force_action = QAgent.choose_actions(self, state)
+        return force_action
+        #return random.choice([10000, -10000])
 
     def tangential_force(self, f):
         self.ball_alpha = f/self.ball_length
-
+        return self.ball_alpha 
+    
     # All the physics code will be added here
     def update(self):
         #higher order terms removed
@@ -117,7 +121,12 @@ class GameManager:
         """
     def run(self):
         self.screen.fill(self.colors['black'])
+        current_state = self.get_state()
+        action = choose_force(current_state)
         self.update()
+        next_state = self.get_state()
+        reward = QAgent.get_reward(next_state, action)
+        QAgent.update_Qvalue(current_state, action, next_state, reward)
         self.draw()
 
 def main():
