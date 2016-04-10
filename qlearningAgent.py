@@ -14,7 +14,7 @@ class QAgent:
         self.Qvalues = {}
         
     def update_Qvalue(self, pstate, action, state, reward):
-        max_qvalue = max([AgentG.get_Qvalue(self, state, a) for a in self.actions)])
+        max_qvalue = max([QAgent.get_Qvalue(self, state, a) for a in self.actions])
         value = reward + self.gamma * max_qvalue
         old_qvalue = self.Qvalues.get(str(pstate), str(action), None)
         
@@ -47,7 +47,7 @@ class QAgent:
     
     def get_reward(self, state, action):
       violate = self.failure(state)
-      if violate = True:
+      if violate == True:
         return -10
       else:
         return 1
@@ -62,7 +62,7 @@ class QAgent:
       angle, vel, alpha = state[0], state[1], state[2]
       temp = ((angle < -self.delta_theta) or (angle > self.delta_theta))
       
-      if temp = True:
+      if temp == True:
         return True
       else:
         return False
