@@ -87,8 +87,8 @@ class GameManager:
         # This will be done by the agent
         return random.choice([10000, -10000])
 
-    def apply_force(self, f):
-        self.ball_alpha = f/self.ball_length*m.sin(self.ball_theta)
+    def tangential_force(self, f):
+        self.ball_alpha = f/self.ball_length
 
     # All the physics code will be added here
     def update(self):
@@ -100,7 +100,11 @@ class GameManager:
         y = np.dot(F,x)
         self.ball_theta=y[0][0]%(2*m.pi)
         self.ball_omega=y[1][0]
-        self.apply_force(self.g + self.choose_force())
+
+        # Apply
+        self.tangential_force(100)
+        self.tangential_force(self.g*m.sin(self.ball_theta) + self.choose_force())
+
         self.ball=Vector2(self.polar_cart())
 
         self.calculate_min_max()
