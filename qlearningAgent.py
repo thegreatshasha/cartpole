@@ -18,7 +18,7 @@ class QAgent:
         value = reward + self.gamma * max_qvalue
         old_qvalue = self.Qvalues.get(str(pstate), str(action), None)
         
-        if old_qvalue = None:
+        if old_qvalue == None:
             self.Qvalues[(str(pstate), str(action))] = reward
         else:
             self.Qvalues[(str(pstate), str(action))] = reward + self.gamma * (max_qvalue - old_value)
