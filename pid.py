@@ -19,15 +19,15 @@ class Pid:
 		self.error_integral+=error*self.dt
 		self.error_t_1=error
 		return control
-
+"""
 a=Pid(0.1, 0.3, 0.001, 0.1)
 speed=0.0
 ref_speed=50.0
 count=0
 
-while count<1000:
+while count<100:
 	count+=1
 	print 'iteration:%d,speed=%d'%(count,speed)
 	error=ref_speed-speed
 	speed=speed+a.controlSignal(error)
-
+"""
