@@ -13,4 +13,4 @@ RUN cd /pygame && python3 setup.py build
 RUN cd /pygame && sudo python3 setup.py install
 
 # Install intelligine and it's dependencies
-RUN cd / && git clone https://github.com/buxx/pygame_hello_world.git
+RUN cd / && git clone https://github.com/thegreatshasha/cartpole.git

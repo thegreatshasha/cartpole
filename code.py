@@ -22,8 +22,8 @@ class GameManager:
         #peg-att
         #initial state: config
         self.peg=Vector2(512.0,100.0)
-        self.peg_v=0.0
-        self.peg_a=0.0
+        self.peg_v=10000.0
+        self.peg_a=100.0
 
 
         #ball-att
@@ -101,7 +101,6 @@ class GameManager:
         #add our input to the sytem: accel->alpha(accel,theta)
         self.peg_a=accel
         self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)+self.peg_a/self.ball_length*m.cos(self.ball_theta)
-
 
         dt=0.0001
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
