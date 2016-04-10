@@ -3,7 +3,7 @@ from vec2d import Vec2d as Vector2
 import math as m
 import numpy as np
 import random
-from qlearningAgent import QAgent
+from agent import QAgent
 
 class GameManager:
 
@@ -40,18 +40,9 @@ class GameManager:
 
         self.ball=Vector2(self.polar_cart())
         #self.ball(x,y)
-        """
-        # Define the cart variables here
-        self.cart = Vector2(500,100)
-        self.cart_size = Vector2(50, 10)
 
+        self.player = QAgent()
 
-        self.cart_v = Vector2(1,0)
-        self.ball_v = Vector2(1,2)
-
-        self.cart_a = Vector2(0,0)
-        self.ball_a = Vector2(0,1)
-        """
     def polar_cart(self):
         x=int(self.peg.x-self.ball_length*m.sin(self.ball_theta))
         y=int(self.peg.y-self.ball_length*m.cos(self.ball_theta))
@@ -86,14 +77,14 @@ class GameManager:
 
     def choose_force(self, state):
         # This will be done by the agent
-        force_action = QAgent.choose_actions(self, state)
+        force_action = self.player.choose_actions(self, state)
         return force_action
         #return random.choice([10000, -10000])
 
     def tangential_force(self, f):
         self.ball_alpha = f/self.ball_length
-        return self.ball_alpha 
-    
+        return self.ball_alpha
+
     # All the physics code will be added here
     def update(self):
         #higher order terms removed
@@ -125,8 +116,8 @@ class GameManager:
         action = self.choose_force(current_state)
         self.update()
         next_state = self.get_state()
-        reward = QAgent.get_reward(next_state, action)
-        QAgent.update_Qvalue(current_state, action, next_state, reward)
+        reward = self.player.get_reward(next_state, action)
+        self.player.update_Qvalue(current_state, action, next_state, reward)
         self.draw()
 
 def main():
