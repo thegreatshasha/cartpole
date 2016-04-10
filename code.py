@@ -24,7 +24,7 @@ class GameManager:
         self.peg=Vector2(512.0,100.0)
         self.peg_v=0.0
         self.peg_a=0.0
-        
+
 
         #ball-att
         self.ball_length=100.0
@@ -32,10 +32,10 @@ class GameManager:
         #initial state: config
         self.ball_theta=m.pi/2#[0,2*pi]
         self.ball_omega=0.0
-        
+
 
         self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)+self.peg_a/self.ball_length*m.cos(self.ball_theta)
-        
+
 
         self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)
 
@@ -84,7 +84,7 @@ class GameManager:
         #define states at the current timestep
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
         x_peg=np.array([[self.peg.x],[self.peg_v],[self.peg_a]])
-        
+
         #states at end of current time step->update
         F=np.array([[1,dt,dt**2.0/2],[0,1,dt],[0,0,1]])
         y=np.dot(F,x)
@@ -97,11 +97,11 @@ class GameManager:
         #update v,a
         self.peg_v=y_peg[0][0]
         self.peg_a=y_peg[1][0]
-        
+
         #add our input to the sytem: accel->alpha(accel,theta)
-        self.peg_a=accel 
+        self.peg_a=accel
         self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)+self.peg_a/self.ball_length*m.cos(self.ball_theta)
-        
+
 
         dt=0.0001
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
@@ -110,7 +110,7 @@ class GameManager:
         y = np.dot(F,x)
         self.ball_theta=y[0][0]%(2*m.pi)
         self.ball_omega=y[1][0]
-        self.apply_force(self.g + self.choose_force())
+        #self.apply_force(self.g + self.choose_force())
         self.ball=Vector2(self.polar_cart())
         """
         self.cart = (self.cart + self.cart_v) % self.size_vec
@@ -123,8 +123,8 @@ class GameManager:
         self.screen.fill(self.colors['black'])
         self.draw()
         pygame.display.flip()
-        reward = self.update(0.0)
-        self.update()
+        reward = self.update(-100.0)
+        #self.update()
 
 
 def main():
