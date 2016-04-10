@@ -2,6 +2,7 @@ import pygame
 from vec2d import Vec2d as Vector2
 import math as m
 import numpy as np
+from pid import Pid
 
 class GameManager:
     
@@ -16,7 +17,7 @@ class GameManager:
         
         #world attr
         self.g=980.0#cm/sec^2
-
+        self.dt=0.005
         #peg-att
         #initial state: config
         self.peg=Vector2(512.0,100.0)
@@ -48,6 +49,12 @@ class GameManager:
         self.cart_a = Vector2(0,0)
         self.ball_a = Vector2(0,1)
         """
+    def get_dt(self):
+        return self.dt
+
+    def getTheta(self):
+        return self.ball_theta
+
     def polar_cart(self):
         x=int(self.peg.x-self.ball_length*m.sin(self.ball_theta))
         y=int(self.peg.y-self.ball_length*m.cos(self.ball_theta))
@@ -66,7 +73,7 @@ class GameManager:
     def update(self,accel):
         #higher order terms removed
         #alpha,accel fixed for this timestep->end of dt update alpha,accel
-        dt=0.005
+        dt=self.dt
         #define states at the current timestep
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
         x_peg=np.array([[self.peg.x],[self.peg_v],[self.peg_a]])
@@ -96,17 +103,19 @@ class GameManager:
         self.cart_v = self.cart_v + self.cart_a
         self.ball_v = self.ball_v + self.ball_a
         """
-    def run(self):
+    def run(self,a):
+        
+        
         self.screen.fill(self.colors['black'])
         self.draw()
         pygame.display.flip()
-        reward = self.update(50.0)
+        reward = self.update(10*a.controlSignal(self.getTheta()))
 
 def main():
     gm = GameManager()
-    
+    a=Pid(0.1, 0.3, 0.001,gm.get_dt())
     for i in range(10000000):
-        gm.run()
+        gm.run(a)
     pygame.quit()
 
 
