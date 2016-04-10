@@ -74,11 +74,14 @@ class GameManager:
 
         self.draw_texts()
 
-    # def states(self):
-    #     return {'theta': self.ball_theta, 'omega':self.ball_omega, 'alpha': self.ball_alpha}
-    #
-    # def states_range(self):
-    #     return {'theta': (), 'omega': (), 'alpha': ()}
+    def states(self):
+        return {'theta': self.ball_theta, 'omega':self.ball_omega}
+
+    def states_range(self):
+        return {'theta': (0, m.pi*2), 'omega': (-10, 10)}
+
+    def actions_range(self):
+        return {'force': (-10*self.g, 10*self.g)}
 
     def choose_force(self):
         # This will be done by the agent
