@@ -122,7 +122,7 @@ class GameManager:
     def run(self):
         self.screen.fill(self.colors['black'])
         current_state = self.get_state()
-        action = choose_force(current_state)
+        action = self.choose_force(current_state)
         self.update()
         next_state = self.get_state()
         reward = QAgent.get_reward(next_state, action)
