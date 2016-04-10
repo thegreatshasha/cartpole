@@ -2,6 +2,7 @@ import pygame
 from vec2d import Vec2d as Vector2
 import math as m
 import numpy as np
+import random
 
 class GameManager:
 
@@ -58,6 +59,14 @@ class GameManager:
         pygame.draw.rect(self.screen, self.colors['red'], (self.cart.x, self.cart.y, 50, 10))
         pygame.draw.line(self.screen, self.colors['blue'], self.cart + self.cart_size/2, self.ball)
         """
+
+    def choose_force(self):
+        # This will be done by the agent
+        return random.choice([10000, -10000])
+
+    def apply_force(self, f):
+        self.ball_alpha = f/self.ball_length*m.sin(self.ball_theta)
+
     # All the physics code will be added here
     def update(self):
         #higher order terms removed
@@ -65,10 +74,10 @@ class GameManager:
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
         F=np.array([[1.0,dt,dt*dt/2.0],[0.0,1.0,dt],[0.0,0.0,1.0]])
         #print x.shape, F.shape
-        y=np.dot(F,x)
+        y = np.dot(F,x)
         self.ball_theta=y[0][0]%(2*m.pi)
         self.ball_omega=y[1][0]
-        self.ball_alpha=self.g/self.ball_length*m.sin(self.ball_theta)
+        self.apply_force(self.g + self.choose_force())
         self.ball=Vector2(self.polar_cart())
         """
         self.cart = (self.cart + self.cart_v) % self.size_vec
