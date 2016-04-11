@@ -69,19 +69,9 @@ class GameManager:
     def get_state(self):
         return [self.ball_theta, self.ball_omega]
 
-    def get_state_ranges(self):
-        # Returns theta and omega range of states
-        return [np.arange(0, m.pi*2, m.pi/16), np.arange(-10, 10, 1)]
-
-    def action_range(self):
-        # Returns action range of values
-        return np.arange(-10*self.g, 10*self.g, 1)
-
-    def choose_force(self, state):
-        # This will be done by the agent
-        force_action = self.player.choose_actions(self, state)
-        return force_action
-        #return random.choice([10000, -10000])
+    def get_ranges(self):
+        # Returns ranges for each state and last but not the least, action
+        return [np.arange(0, m.pi*2, m.pi/16), np.arange(-10, 10, 1), np.arange(-10*self.g, 10*self.g, 1)]
 
     def tangential_force(self, f):
         self.ball_alpha = f/self.ball_length
@@ -107,9 +97,10 @@ class GameManager:
         #self.calculate_min_max()
 
     def run(self):
+        # Core algorithm, everything happens here
         self.screen.fill(self.colors['black'])
         current_state = self.get_state()
-        action = self.choose_force(current_state) # Find the best possible action for current state
+        action = self.player.choose_actions(current_state) # Decide best action according to the agent
         self.update(action) # Execute that action
         next_state = self.get_state() # Get next state
         reward = self.player.get_reward(prev_state, next_state, action)

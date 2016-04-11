@@ -1,43 +1,31 @@
 import numpy as np
 import random
 import math.pi as m
+from table import Table
 
 class QAgent:
-    def __init__(self, state_range, action_range):
-        self.epsilon = 0.5 #Greedy
-        self.gamma = 0.5 #Discount factor
-        self.state_ranges = state_ranges
-        self.actions = action_range
-        qval_dim = [dim.shape[0] for dim in self.state_ranges] + [self.actions.shape[0]]
-        self.Qvalues = np.random.randn()
+    def __init__(self, rngs):
+        # Initialize the state action table
+        self.Qvals = Table(ranges=rngs)
+        self.actions = rngs[-1] # Last range is action range
 
-    def get_state(self, state):
-        # Returns 1d array for q value correponding to
-        state_inds = [np.digitize(dim)-1 for dim in state]
-        return self.Qvalues[state_inds]
+        # Q learning parameters
+        self.epsilon = 0.5 # Randomness
+        self.gamma = 0.5 # Future discount factor
 
-    def set_state(self, state, action_index, value):
-        
-
-    def get_action(self):
-
-
-    def update_Qvalue(self, pstate, action, state, reward):
-        max_qvalue = max([self.get_Qvalue(self, state, a) for a in self.actions])
+    def update_Qvalue(self, pstate, action, nstate, reward):
+        max_qvalue = max(self.Qvals[nstate])
         value = reward + self.gamma * max_qvalue
-        old_qvalue = self.Qvalues.get(str(pstate), str(action), None)
+        pstate_action = pstate + [action]
+        p_Qval = self.Qvals[pstate_action]
 
-        if old_qvalue == None:
-            self.Qvalues[(str(pstate), str(action))] = reward
-        else:
-            self.Qvalues[(str(pstate), str(action))] = reward + self.gamma * (max_qvalue - old_value)
+        self.Qvals[pstate_action] = reward + self.gamma * (max_Qval - p_Qval)
 
-    def choose_actions(self, state):
+    def choose_action(self, state):
         if random.random() <= self.epsilon:
-            return self.actions[np.random.choice(len(self.actions))]
+            return self.actions[np.random.choice(len(self.actions)-1)] # Choose any element but last
         else:
-            q = [self.get_Qvalue(self, state, a) for a in self.actions]
-            maxQ = max(q)
+            q = max(self.Qvals)
             count = q.count(maxQ)
 
         if count > 1:
@@ -48,11 +36,5 @@ class QAgent:
         action = self.actions[i]
         return action
 
-    def get_Qvalue(self,state, action):
-        return self.Qvalues.get((str(state), str(action)), 0.0)
-
-    def get_actions(self):
-        return self.actions
-
     def get_reward(self, prev_state, next_state, action):
-        return
+        return 0

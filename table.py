@@ -2,6 +2,7 @@ import numpy as np
 import math as m
 
 class Table:
+    # Define a state table indexed not by indices but by state values. Binary search used for finding matching state
 
     def __init__(self, ranges, values=[]):
         # Ranges is an n+1 array, n dimensions for state values and last for action values
@@ -34,11 +35,16 @@ class Table:
 
         return tuple(indices)
 
-    def get(self, vals):
+    # Retrieve an item
+    def __getitem__(self, vals):
         return self.values[self.find_indices(vals)]
 
-    def set(self, vals, new_value):
+    # Set an item
+    def __setitem__(self, vals, new_value):
         self.values[self.find_indices(vals)] = new_value
+
+    def find_max(state):
+        self.values[]
 
 
 
@@ -56,14 +62,17 @@ def unit_tests():
 
     for inp, out in zip(inputs, outputs):
         # Test access
-        assert(tb.get(inp)==out), "%f==%f?"%(tb.get(inp), out)
+        assert(tb[inp]==out), "%f==%f?"%(tb[inp], out)
+
+    # Test that max element is last
+
 
     # Test without initializing vals
     tb = Table(ranges=rngs)
 
     for inp, out in zip(inputs, outputs):
         # Test that we don't get these values if we intialize with random weights
-        assert(not tb.get(inp)==out), "%f==%f?"%(tb.get(inp), out)
+        assert(not tb[inp]==out), "%f==%f?"%(tb[inp], out)
 
 if __name__ == "__main__":
     unit_tests()
