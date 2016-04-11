@@ -17,10 +17,10 @@ class QAgent:
         return self.Qvalues[state_inds]
 
     def set_state(self, state, action_index, value):
-
+        
 
     def get_action(self):
-        
+
 
     def update_Qvalue(self, pstate, action, state, reward):
         max_qvalue = max([self.get_Qvalue(self, state, a) for a in self.actions])
