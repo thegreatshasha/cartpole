@@ -4,12 +4,12 @@ import math as m
 class Table:
 
     def __init__(self, ranges, values=[]):
-        # Ranges is an n+1 array, n dimensions for states and last for actions
+        # Ranges is an n+1 array, n dimensions for state values and last for action values
         self.ranges = ranges
 
         # Tweak this to initialize with n+1 dimensions +1 for actions array, actions array will be discretized as well
         if not len(values):
-            values = np.random.randn(rang.shape[0]-1)
+            values = np.random.randn(ranges.shape[0]-1)
         self.values = values
 
     def find_value_index(self, val, rng):
