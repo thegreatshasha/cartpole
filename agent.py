@@ -29,4 +29,6 @@ class QAgent:
             return self.Qvals.max_action(state)
 
     def get_reward(self, prev_state, next_state, action):
-        return 0
+        theta2 = next_state[0]
+        theta1 = prev_state[0]
+        return 100*(m.cos(theta2) - m.cos(theta1))

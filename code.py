@@ -80,7 +80,7 @@ class GameManager:
     # All the physics code will be added here
     def update(self, action):
         #higher order terms removed
-        dt=0.0001
+        dt=0.01
         x=np.array([[self.ball_theta],[self.ball_omega],[self.ball_alpha]])
         F=np.array([[1.0,dt,dt*dt/2.0],[0.0,1.0,dt],[0.0,0.0,1.0]])
         #print x.shape, F.shape
@@ -111,8 +111,7 @@ def main():
     gm = GameManager()
 
     for i in range(10000000):
-        for i in range(100):
-            gm.run()
+        gm.run()
         gm.clock.tick(60)
         pygame.display.flip()
     pygame.quit()
