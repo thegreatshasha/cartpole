@@ -78,7 +78,22 @@ class TicTacToe:
     	return True,3
     	
 
-"""
+def chooseMaxQ(state,actions):
+
+	choice=values[state]#q val for all actions
+	choice=[[choice[j],j] for j in range(len(choice))]
+	choice.sort()
+	j=len(choice)-1
+		
+	while actions[choice[j][1]]==-1]:
+		j-=1
+		
+	action=choice[j][1]
+	Q_max=choice[j][0]
+	
+	return Q_max,action
+
+#constants and Q-Learning params
 size=3
 dim=[size]*(size*size)
 dim.append(size*size)
@@ -86,12 +101,18 @@ values=np.zeros(shape=dim)
 rewards={0:50.0,1:-50.0,3:5.0,4:1.0}
 alpha=0.1
 gamma=0.8
+
+games_played=0
+games_won=0
+
+actions=range(9)
+a=TicTacToe(3)
+a.setBoard()
+print chooseMaxQ(a.getState(),actions)
 """
-i=0
+while games_played<1000000:
 
-
-while i<1:
-
+	#reset these every game
 	a=TicTacToe(3)
 	a.setBoard()#create game
 	gs=False#gameover check flag
@@ -101,48 +122,60 @@ while i<1:
 	
 	while not gs:
 		
+		if i>1000:
+			pdb.set_trace()
+			a.printBoard()
+			print "actions"
+			print actions
 		
-		pdb.set_trace()
-		a.printBoard()
-		print "actions"
-		print actions
 		if turn==0:
+				
+			#code for random agent
+			print 'x turn:Q-learning agent'
 			
-			print 'x turn'
-			"""state=getState()
+			state=a.getState()
 			choice=values.item(state)#q val for all actions
 			choice=[[choice[j],j] for j in range(len(choice))]
 			choice.sort()
-			j=len(choice-1)
+			j=len(choice)-1
 			while actions[choice[j][1]]==-1:
 				j-=1
-			action=choice[j][1]
-			state_a=state.insert(size*size,action)
-			actions[action]=-1
-			gs,r_key=gameOverCheck()
-			values[state_a]=values[state_a]+alpha*(rewards[r_key]+)
-			#q-learning generates action
-			play(action,turn)
-			turn=1
-			"""
-			action=random.choice(actions)
-			
-			while action==-1:
-				action=random.choice(actions)#random agent generates action
+			action=choice[j][1]#action with largest Q-val still in actions
 			
 			print 'action is:%d'%action
-			a.play(action,turn)
+			play(action,turn)
 			actions[action]=-1
+		
+			state_a=state.insert(size*size,action)
+			state_updated=getState()
+
+			gs,r_key=gameOverCheck()
+			values[state_a]=values[state_a]+alpha*(rewards[r_key]+gama*(max_rem)-values[state_a])
+			#q-learning generates action
 			
-			turn=1#change turn
 			
-			gs,r_key=a.gameOverCheck()
-			print 'reward:%d'%r_key
+			turn=1
+			
+			#RANDOM AGENT VS RANDOM AGENT _____________________________________________________
+			#action=random.choice(actions)
+			
+			#while action==-1:
+			#	action=random.choice(actions)#random agent generates action
+			
+			#print 'action is:%d'%action
+			#a.play(action,turn)
+			#actions[action]=-1
+			
+			#turn=1#change turn
+			
+			#gs,r_key=a.gameOverCheck()
+			#print 'reward:%d'%r_key
 			
 			continue
 
 		if turn==1:
-			print 'o turn'
+			
+			print 'o turn:random agent'
 			action=random.choice(actions)
 			
 			while action==-1:
@@ -152,10 +185,10 @@ while i<1:
 			a.play(action,turn)
 			actions[action]=-1#remove the action from the action set	
 			
-			turn=0
-			
 			gs,r_key=a.gameOverCheck()#check if the game is over
-			print 'reward:%d'%r_key
-	i+=1
-a.printBoard()
-print "game over"
+			
+			turn=0
+
+	games_played+=1
+	
+"""
