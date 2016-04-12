@@ -109,7 +109,6 @@ gamma=0.8
 #progress tracking
 games_played=0
 games_won=0
-i=0
 
 while games_played<1000000:
 
@@ -123,7 +122,8 @@ while games_played<1000000:
 	
 	while not gs:
 		
-		if i>1000:
+		print "iteration:%d"%games_played
+		if games_played>1000:
 			pdb.set_trace()
 			a.printBoard()
 			print "actions"
@@ -141,15 +141,17 @@ while games_played<1000000:
 			a.play(action,turn)
 			actions[action]=-1
 			
-			state_a = state.insert(size*size,action)#state,action pair for which the Q-value is updated
-			
-			gs,r_key=gameOverCheck()
+			state_a = list(state)
+			state_a.insert(size*size,action)#state,action pair for which the Q-value is updated
+			state_a= tuple(state_a)
+
+			gs,r_key=a.gameOverCheck()
 			
 			if gs:
 				values[state_a]=0
 			else:
 				Q_tplus1_max,a_max=chooseMaxQ(a.getState(),actions)
-				values[state_a]+= alpha * ( rewards[r_key] + gama * Q_tplus1_max - values[state_a] )
+				values[state_a]+= alpha * ( rewards[r_key] + gamma * Q_tplus1_max - values[state_a] )
 			#q-learning generates action
 			
 			
