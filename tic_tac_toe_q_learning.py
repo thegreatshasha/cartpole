@@ -127,7 +127,7 @@ while i<1:
 			"""
 			action=random.choice(actions)
 			
-			while actions[action]==-1:
+			while action==-1:
 				action=random.choice(actions)#random agent generates action
 			
 			print 'action is:%d'%action
@@ -145,7 +145,7 @@ while i<1:
 			print 'o turn'
 			action=random.choice(actions)
 			
-			while actions[action]==-1:
+			while action==-1:
 				action=random.choice(actions)#random agent generates action
 			
 			print 'action is:%d'%action
