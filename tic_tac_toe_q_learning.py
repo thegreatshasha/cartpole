@@ -116,7 +116,7 @@ a1=[]
 b1=[]
 total_games=100000
 
-step=100
+step=100000
 d_greedy=1/(total_games/step)
 
 while games_played<total_games:
@@ -147,8 +147,8 @@ while games_played<total_games:
 		
 		
 		if turn==0:
-			r=np.random.uniform()
-			if a>greedy:	
+			greedytorandom=np.random.uniform()
+			if greedytorandom>greedy:	
 			#code for random agent
 				print 'x turn:Q-learning agent'
 			
