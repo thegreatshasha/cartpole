@@ -102,7 +102,7 @@ dim.append(size*size)
 values=np.zeros(shape=dim)
 
 #q-knobs
-rewards={0:50.0,1:-50.0,3:5.0,4:1.0}
+rewards={0:50.0,1:-1000.0,3:5.0,4:1.0}
 alpha=0.1
 gamma=0.8
 
@@ -120,41 +120,48 @@ while games_played<1000000000:
 	turn=np.random.randint(0,1)#random choice to decide who starts
 	actions=range(9)
 
+	#progress montioring
+	print "iteration:%d"%games_played
+	if games_played>=1000 and games_played%1000==0:
+		print 'games won by Q-learning agent:%d/1000,games won by RA:%d'%(games_won,games_won2)
+		pdb.set_trace()
+		games_won=0
+		games_won2=0
 	
 	while not gs:
 		
-		print "iteration:%d"%games_played
-		if games_played>=100 and games_played%100==0:
-			print 'games won by Q-learning agent:%d/100,games won by RA:%d'%(games_won,games_won2)
-			pdb.set_trace()
-			games_won=0
-			games_won2=0
+		
 		
 		if turn==0:
 				
 			#code for random agent
 			print 'x turn:Q-learning agent'
 			
-			state=a.getState()
-			Q_t_max,action = chooseMaxQ(state,actions)
+			s_t=a.getState()
+			Q_t_max,a_t = chooseMaxQ(s_t,actions)
 			
-			print 'action is:%d'%action
-			a.play(action,turn)
-			actions[action]=-1
+			print 'action is:%d'%a_t
+			a.play(a_t,turn)
+			actions[a_t]=-1
 			
-			state_a = list(state)
-			state_a.insert(size*size,action)#state,action pair for which the Q-value is updated
-			state_a= tuple(state_a)
+			s_t = list(s_t)
+			s_t.insert(size*size,a_t)#state,action pair for which the Q-value is updated
+			s_a_t= tuple(s_t)
 
 			gs,r_key=a.gameOverCheck()
 			
+			s_tplus1=a.getState()
+
 			if gs:
+				for j in range(len(actions)):
+					values[s_tplus1][j]=0
 				if r_key==0:
-					games_won+=1
-				values[state_a]=0
+					games_won=games_won+1
+				Q_tplus1_max=0
 			else:
-				Q_tplus1_max,a_max=chooseMaxQ(a.getState(),actions)
-				values[state_a]+= alpha * ( rewards[r_key] + gamma * Q_tplus1_max - values[state_a] )
+				Q_tplus1_max,a_max=chooseMaxQ(s_tplus1,actions)
+			
+			values[s_a_t]+= alpha * ( rewards[r_key] + gamma * Q_tplus1_max - values[s_a_t] )
 			#q-learning generates action
 			
 			
