@@ -1,5 +1,7 @@
 import numpy as np
 import math as m
+import pdb
+import random
 
 class TicTacToe:
     
@@ -7,10 +9,13 @@ class TicTacToe:
     	#values 0 and 1 represent x and o respectively and -1 for blank
     	self.size=size
     	self.board=np.zeros((self.size,self.size))
-    	for row in self.board:
-    		for col in row:
-    			self.board[row][col]=2
+    	
  
+    def setBoard(self):
+    	for i in range(len(self.board)):
+    		for j in range(len(self.board[0])):
+    			self.board[i][j]=2
+
     def play(self,action,player):
     	#player 0-x and 1-o, action is the position
     	i=action/self.size
@@ -72,6 +77,8 @@ class TicTacToe:
     				return False,4
     	return True,3
     	
+
+"""
 size=3
 dim=[size]*(size*size)
 dim.append(size*size)
@@ -79,30 +86,73 @@ values=np.zeros(shape=dim)
 rewards={0:50.0,1:-50.0,3:5.0,4:1.0}
 alpha=0.1
 gamma=0.8
+"""
 i=0
 
-while i<10000
-	a=TicTacToe(3)#create game
+
+while i<1:
+
+	a=TicTacToe(3)
+	a.setBoard()#create game
 	gs=False#gameover check flag
-	turn=random.randint(0,1)#random choice to decide who starts
+	turn=np.random.randint(0,1)#random choice to decide who starts
 	actions=range(9)
 
 	
-	while !gs:
-		state=getState()
+	while not gs:
+		
+		
+		pdb.set_trace()
+		a.printBoard()
 		if turn==0:
-			choice=values.item(state)
-			state.insert(,a.)
+			
+			"""state=getState()
+			choice=values.item(state)#q val for all actions
+			choice=[[choice[j],j] for j in range(len(choice))]
+			choice.sort()
+			j=len(choice-1)
+			while actions[choice[j][1]]==-1:
+				j-=1
+			action=choice[j][1]
+			state_a=state.insert(size*size,action)
+			actions[action]=-1
+			gs,r_key=gameOverCheck()
+			values[state_a]=values[state_a]+alpha*(rewards[r_key]+)
 			#q-learning generates action
 			play(action,turn)
 			turn=1
+			"""
+			action=random.choice(actions)
+			
+			while actions[action]==-1:
+				action=random.choice(actions)#random agent generates action
+			
+			print 'action is:%d'%action
+			a.play(action,turn)
+			actions[action]==-1
+			
+			turn=1#change turn
+			
+			gs,r_key=a.gameOverCheck()
+			print 'reward:%d'%r_key
+			
+			continue
 
 		if turn==1:
-			action=actions[np.random.randint(len(actions))]
-			#random agent generates action
-			play(action,turn)
-			turn=1
-
-		actions.remove(action)#remove the action from the action set	
-		gs,r_key=gameOverCheck()#check if the game is over
-		
+			
+			action=random.choice(actions)
+			
+			while actions[action]==-1:
+				action=random.choice(actions)#random agent generates action
+			
+			print 'action is:%d'%action
+			a.play(action,turn)
+			actions[action]=-1#remove the action from the action set	
+			
+			turn=0
+			
+			gs,r_key=a.gameOverCheck()#check if the game is over
+			print 'reward:%d'%r_key
+	i+=1
+a.printBoard()
+print "game over"
