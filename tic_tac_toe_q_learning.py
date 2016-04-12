@@ -110,7 +110,7 @@ gamma=0.8
 games_played=0
 games_won=0
 
-while games_played<1000000:
+while games_played<1000000000:
 
 	#reset these every game
 	a=TicTacToe(3)
@@ -123,11 +123,10 @@ while games_played<1000000:
 	while not gs:
 		
 		print "iteration:%d"%games_played
-		if games_played>1000:
+		if games_played>10000 and games_played%100==0:
+			print 'games won by Q-learning agent:%d/100'%games_won
 			pdb.set_trace()
-			a.printBoard()
-			print "actions"
-			print actions
+			games_won=0
 		
 		if turn==0:
 				
@@ -148,6 +147,8 @@ while games_played<1000000:
 			gs,r_key=a.gameOverCheck()
 			
 			if gs:
+				if r_key==0:
+					games_won+=1
 				values[state_a]=0
 			else:
 				Q_tplus1_max,a_max=chooseMaxQ(a.getState(),actions)
