@@ -109,6 +109,7 @@ gamma=0.8
 #progress tracking
 games_played=0
 games_won=0
+games_won2=0
 
 while games_played<1000000000:
 
@@ -123,10 +124,11 @@ while games_played<1000000000:
 	while not gs:
 		
 		print "iteration:%d"%games_played
-		if games_played>10000 and games_played%10000==0:
-			print 'games won by Q-learning agent:%d/10000'%games_won
+		if games_played>=100 and games_played%100==0:
+			print 'games won by Q-learning agent:%d/100,games won by RA:%d'%(games_won,games_won2)
 			pdb.set_trace()
 			games_won=0
+			games_won2=0
 		
 		if turn==0:
 				
@@ -188,7 +190,8 @@ while games_played<1000000000:
 			actions[action]=-1#remove the action from the action set	
 			
 			gs,r_key=a.gameOverCheck()#check if the game is over
-			
+			if r_key==1:
+				games_won2+=1
 			turn=0
 
 	games_played+=1
