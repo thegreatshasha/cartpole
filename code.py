@@ -41,7 +41,7 @@ class GameManager:
         self.ball=Vector2(self.polar_cart())
         #self.ball(x,y)
 
-        self.player = QAgent(self.get_state_range(), self.get_action_range())
+        self.player = QAgent(self.get_ranges())
 
     def polar_cart(self):
         x=int(self.peg.x-self.ball_length*m.sin(self.ball_theta))
@@ -64,7 +64,7 @@ class GameManager:
         pygame.draw.circle(self.screen, self.colors['blue'], self.ball, 5)
         pygame.draw.line(self.screen, self.colors['blue'], self.peg, self.ball)
 
-        self.draw_texts()
+        #self.draw_texts()
 
     def get_state(self):
         return [self.ball_theta, self.ball_omega]
@@ -90,7 +90,7 @@ class GameManager:
 
         # Apply
         self.tangential_force(100)
-        self.tangential_force(self.g*m.sin(self.ball_theta) + self.choose_force())
+        self.tangential_force(self.g*m.sin(self.ball_theta) + action)
 
         self.ball=Vector2(self.polar_cart())
 
@@ -99,12 +99,12 @@ class GameManager:
     def run(self):
         # Core algorithm, everything happens here
         self.screen.fill(self.colors['black'])
-        current_state = self.get_state()
-        action = self.player.choose_actions(current_state) # Decide best action according to the agent
+        prev_state = self.get_state()
+        action = self.player.choose_action(prev_state) # Decide best action according to the agent
         self.update(action) # Execute that action
         next_state = self.get_state() # Get next state
         reward = self.player.get_reward(prev_state, next_state, action)
-        self.player.update_Qvalue(current_state, action, next_state, reward)
+        self.player.update_Qvalue(prev_state, action, next_state, reward)
         self.draw()
 
 def main():

@@ -43,9 +43,10 @@ class Table:
     def __setitem__(self, vals, new_value):
         self.values[self.find_indices(vals)] = new_value
 
-    def find_max(state):
-        self.values[]
-
+    # Returns action corresponding to maximum value
+    def max_action(self, state):
+        idx = np.argmax(self[state])
+        return self.ranges[-1][idx]
 
 
 def unit_tests():
@@ -64,8 +65,8 @@ def unit_tests():
         # Test access
         assert(tb[inp]==out), "%f==%f?"%(tb[inp], out)
 
-    # Test that max element is last
-
+    # Test to test that we get best action corresponding to Q value
+    assert(tb.max_action([100])==-1), "%f==%f?"%(tb.max_dim([100]), -1)
 
     # Test without initializing vals
     tb = Table(ranges=rngs)
