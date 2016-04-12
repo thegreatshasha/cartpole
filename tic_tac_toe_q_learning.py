@@ -104,8 +104,11 @@ while i<1:
 		
 		pdb.set_trace()
 		a.printBoard()
+		print "actions"
+		print actions
 		if turn==0:
 			
+			print 'x turn'
 			"""state=getState()
 			choice=values.item(state)#q val for all actions
 			choice=[[choice[j],j] for j in range(len(choice))]
@@ -129,7 +132,7 @@ while i<1:
 			
 			print 'action is:%d'%action
 			a.play(action,turn)
-			actions[action]==-1
+			actions[action]=-1
 			
 			turn=1#change turn
 			
@@ -139,7 +142,7 @@ while i<1:
 			continue
 
 		if turn==1:
-			
+			print 'o turn'
 			action=random.choice(actions)
 			
 			while actions[action]==-1:
