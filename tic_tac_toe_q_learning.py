@@ -123,8 +123,8 @@ while games_played<1000000000:
 	while not gs:
 		
 		print "iteration:%d"%games_played
-		if games_played>10000 and games_played%100==0:
-			print 'games won by Q-learning agent:%d/100'%games_won
+		if games_played>10000 and games_played%10000==0:
+			print 'games won by Q-learning agent:%d/10000'%games_won
 			pdb.set_trace()
 			games_won=0
 		
