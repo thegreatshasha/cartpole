@@ -64,14 +64,14 @@ class GameManager:
         pygame.draw.circle(self.screen, self.colors['blue'], self.ball, 5)
         pygame.draw.line(self.screen, self.colors['blue'], self.peg, self.ball)
 
-        #self.draw_texts()
+        self.draw_texts()
 
     def get_state(self):
         return [self.ball_theta, self.ball_omega]
 
     def get_ranges(self):
         # Returns ranges for each state and last but not the least, action
-        return [np.arange(0, m.pi*2, m.pi/16), np.arange(-10, 10, 1), np.arange(-10*self.g, 10*self.g, 1)]
+        return [np.arange(0, m.pi*2, m.pi/64), np.arange(-100, 100, 10), np.arange(-10*self.g, 10*self.g, 1)]
 
     def tangential_force(self, f):
         self.ball_alpha = f/self.ball_length
@@ -86,16 +86,16 @@ class GameManager:
         #print x.shape, F.shape
         y = np.dot(F,x)
         self.ball_theta=y[0][0]%(2*m.pi)
-        self.ball_omega=y[1][0]
+        self.ball_omega=(y[1][0]%10)*(y[1][0]/abs(y[1][0]))
 
         # Apply
         self.tangential_force(100)
-        action = 0
+        #action = 0
         self.tangential_force(self.g*m.sin(self.ball_theta) + action)
 
         self.ball=Vector2(self.polar_cart())
 
-        #self.calculate_min_max()
+        self.calculate_min_max()
 
     def run(self):
         # Core algorithm, everything happens here

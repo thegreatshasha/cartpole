@@ -10,9 +10,9 @@ class QAgent:
         self.actions = rngs[-1] # Last range is action range
 
         # Q learning parameters
-        self.epsilon = 0.2 # Randomness
-        self.gamma = 0.5 # Future discount factor
-        self.eta = 1.0
+        self.epsilon = 0.3 # Randomness
+        self.gamma = 0.8 # Future discount factor
+        self.eta = 0.3
 
     def update_Qvalue(self, pstate, action, nstate, reward):
         max_Qval = max(self.Qvals[nstate])
@@ -20,7 +20,7 @@ class QAgent:
         pstate_action = pstate + [action]
         p_Qval = self.Qvals[pstate_action]
 
-        self.Qvals[pstate_action] = self.Qvals[pstate_action] + self.eta * (reward + self.gamma * (max_Qval - p_Qval))
+        self.Qvals[pstate_action] = p_Qval + self.eta * (reward + self.gamma * max_Qval - p_Qval)
 
     def choose_action(self, state):
         if random.random() <= self.epsilon:
@@ -31,4 +31,5 @@ class QAgent:
     def get_reward(self, prev_state, next_state, action):
         theta2 = next_state[0]
         theta1 = prev_state[0]
-        return 10000*(m.cos(theta2) - m.cos(theta1))
+        omega = abs(next_state[1])
+        return 1000*omega*(m.cos(theta2) - m.cos(theta1))
