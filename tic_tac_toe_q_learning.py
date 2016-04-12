@@ -2,6 +2,7 @@ import numpy as np
 import math as m
 import pdb
 import random
+import matplotlib.pyplot as plt
 
 class TicTacToe:
     
@@ -97,7 +98,7 @@ def chooseMaxQ(state,actions):
 size=3
 dim=[size]*(size*size)
 dim.append(size*size)
-
+#dim=tuple(dim)
 #Q-utility table
 values=np.zeros(shape=dim)
 
@@ -105,13 +106,20 @@ values=np.zeros(shape=dim)
 rewards={0:50.0,1:-1000.0,3:5.0,4:1.0}
 alpha=0.1
 gamma=0.8
+greedy=1
 
 #progress tracking
 games_played=0
 games_won=0
 games_won2=0
+a1=[]
+b1=[]
+total_games=100000
 
-while games_played<1000000000:
+step=100
+d_greedy=1/(total_games/step)
+
+while games_played<total_games:
 
 	#reset these every game
 	a=TicTacToe(3)
@@ -122,49 +130,70 @@ while games_played<1000000000:
 
 	#progress montioring
 	print "iteration:%d"%games_played
-	if games_played>=1000 and games_played%1000==0:
-		print 'games won by Q-learning agent:%d/1000,games won by RA:%d'%(games_won,games_won2)
-		pdb.set_trace()
+	
+	
+	if games_played>=step and games_played%step==0:
+		
+		greedy=greedy-d_greedy
+		print 'games won by Q-learning agent:%d/10000,games won by RA:%d/10000'%(games_won,games_won2)
+		a1.append([games_played,games_won])
+		b1.append([games_played,games_won2])
+		
+		
 		games_won=0
 		games_won2=0
 	
 	while not gs:
 		
 		
-		
 		if turn==0:
-				
+			r=np.random.uniform()
+			if a>greedy:	
 			#code for random agent
-			print 'x turn:Q-learning agent'
+				print 'x turn:Q-learning agent'
 			
-			s_t=a.getState()
-			Q_t_max,a_t = chooseMaxQ(s_t,actions)
+				s_t=a.getState()
+				Q_t_max,a_t = chooseMaxQ(s_t,actions)
 			
-			print 'action is:%d'%a_t
-			a.play(a_t,turn)
-			actions[a_t]=-1
+				print 'action is:%d'%a_t
+				a.play(a_t,turn)
+				actions[a_t]=-1
 			
-			s_t = list(s_t)
-			s_t.insert(size*size,a_t)#state,action pair for which the Q-value is updated
-			s_a_t= tuple(s_t)
+				s_t = list(s_t)
+				s_t.insert(size*size,a_t)#state,action pair for which the Q-value is updated
+				s_a_t= tuple(s_t)
 
-			gs,r_key=a.gameOverCheck()
+				gs,r_key=a.gameOverCheck()
 			
-			s_tplus1=a.getState()
+				s_tplus1=a.getState()
 
-			if gs:
-				for j in range(len(actions)):
-					values[s_tplus1][j]=0
-				if r_key==0:
-					games_won=games_won+1
-				Q_tplus1_max=0
-			else:
-				Q_tplus1_max,a_max=chooseMaxQ(s_tplus1,actions)
+				if gs:
+					for j in range(len(actions)):
+						values[s_tplus1][j]=0
+					if r_key==0:
+						games_won=games_won+1
+					Q_tplus1_max=0
+				else:
+					Q_tplus1_max,a_max=chooseMaxQ(s_tplus1,actions)
 			
-			values[s_a_t]+= alpha * ( rewards[r_key] + gamma * Q_tplus1_max - values[s_a_t] )
+				values[s_a_t]+= alpha * ( rewards[r_key] + gamma * Q_tplus1_max - values[s_a_t] )
 			#q-learning generates action
+			else:
+				
+				print 'o turn:random agent'
+				action=random.choice(actions)
 			
+				while action==-1:
+					action=random.choice(actions)#random agent generates action
 			
+				print 'action is:%d'%action
+				a.play(action,turn)
+				actions[action]=-1#remove the action from the action set	
+			
+				gs,r_key=a.gameOverCheck()#check if the game is over
+				if r_key==0:
+					games_won+=1
+
 			turn=1
 			
 			#RANDOM AGENT VS RANDOM AGENT _____________________________________________________
@@ -202,4 +231,6 @@ while games_played<1000000000:
 			turn=0
 
 	games_played+=1
-	
+plt.plot(*zip(*a1), marker='o', color='r', ls='')
+plt.plot(*zip(*b1), marker='o', color='b', ls='')	
+plt.show()
