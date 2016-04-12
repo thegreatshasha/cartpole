@@ -12,7 +12,7 @@ class QAgent:
         # Q learning parameters
         self.epsilon = 0.2 # Randomness
         self.gamma = 0.5 # Future discount factor
-        self.eta = 0.2
+        self.eta = 1.0
 
     def update_Qvalue(self, pstate, action, nstate, reward):
         max_Qval = max(self.Qvals[nstate])
@@ -31,4 +31,4 @@ class QAgent:
     def get_reward(self, prev_state, next_state, action):
         theta2 = next_state[0]
         theta1 = prev_state[0]
-        return 100*(m.cos(theta2) - m.cos(theta1))
+        return 10000*(m.cos(theta2) - m.cos(theta1))

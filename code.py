@@ -90,6 +90,7 @@ class GameManager:
 
         # Apply
         self.tangential_force(100)
+        action = 0
         self.tangential_force(self.g*m.sin(self.ball_theta) + action)
 
         self.ball=Vector2(self.polar_cart())
