@@ -134,12 +134,13 @@ while games_played<1000000:
 			#code for random agent
 			print 'x turn:Q-learning agent'
 			
-			Q_t_max,action = chooseMaxQ(a.getState(),actions)
+			state=a.getState()
+			Q_t_max,action = chooseMaxQ(state,actions)
 			
 			print 'action is:%d'%action
 			a.play(action,turn)
 			actions[action]=-1
-		
+			
 			state_a = state.insert(size*size,action)#state,action pair for which the Q-value is updated
 			
 			gs,r_key=gameOverCheck()
