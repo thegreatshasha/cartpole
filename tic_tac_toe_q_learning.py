@@ -85,7 +85,7 @@ def chooseMaxQ(state,actions):
 	choice.sort()
 	j=len(choice)-1
 		
-	while actions[choice[j][1]]==-1]:
+	while actions[choice[j][1]]==-1:
 		j-=1
 		
 	action=choice[j][1]
@@ -97,19 +97,20 @@ def chooseMaxQ(state,actions):
 size=3
 dim=[size]*(size*size)
 dim.append(size*size)
+
+#Q-utility table
 values=np.zeros(shape=dim)
+
+#q-knobs
 rewards={0:50.0,1:-50.0,3:5.0,4:1.0}
 alpha=0.1
 gamma=0.8
 
+#progress tracking
 games_played=0
 games_won=0
+i=0
 
-actions=range(9)
-a=TicTacToe(3)
-a.setBoard()
-print chooseMaxQ(a.getState(),actions)
-"""
 while games_played<1000000:
 
 	#reset these every game
@@ -133,24 +134,21 @@ while games_played<1000000:
 			#code for random agent
 			print 'x turn:Q-learning agent'
 			
-			state=a.getState()
-			choice=values.item(state)#q val for all actions
-			choice=[[choice[j],j] for j in range(len(choice))]
-			choice.sort()
-			j=len(choice)-1
-			while actions[choice[j][1]]==-1:
-				j-=1
-			action=choice[j][1]#action with largest Q-val still in actions
+			Q_t_max,action = chooseMaxQ(a.getState(),actions)
 			
 			print 'action is:%d'%action
-			play(action,turn)
+			a.play(action,turn)
 			actions[action]=-1
 		
-			state_a=state.insert(size*size,action)
-			state_updated=getState()
-
+			state_a = state.insert(size*size,action)#state,action pair for which the Q-value is updated
+			
 			gs,r_key=gameOverCheck()
-			values[state_a]=values[state_a]+alpha*(rewards[r_key]+gama*(max_rem)-values[state_a])
+			
+			if gs:
+				values[state_a]=0
+			else:
+				Q_tplus1_max,a_max=chooseMaxQ(a.getState(),actions)
+				values[state_a]+= alpha * ( rewards[r_key] + gama * Q_tplus1_max - values[state_a] )
 			#q-learning generates action
 			
 			
@@ -191,4 +189,3 @@ while games_played<1000000:
 
 	games_played+=1
 	
-"""
