@@ -1,4 +1,4 @@
-# CartPole Solver in python
+# Reinforcement Learning framework in python
 
 ## Installation
 > Install pygame
