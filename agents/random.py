@@ -5,7 +5,7 @@ class RandomAgent(AbstractAgent):
     def __init__(self, rngs):
         self.actions = rngs[-1] # Last range is action range
 
-    def update_Qvalue(self, pstate, action, nstate, reward):
+    def update_Qvalue(self, pstate, action, nstate, reward, terminal):
         pass
 
     def choose_action(self, state):

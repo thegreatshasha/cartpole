@@ -4,7 +4,7 @@ class AbstractAgent:
         raise("Not implemented!")
 
     """ Update the qvalue based on the previous state, action """
-    def update_Qvalue(self, pstate, action, nstate, reward):
+    def update_Qvalue(self, pstate, action, nstate, reward, terminal):
         raise("Not implemented!")
 
     """ Choose the best action according for the current state """

@@ -26,9 +26,9 @@ class AbstractGame:
     def update(self):
         prev_state = self.get_state()
         action = self.agent.choose_action(prev_state) # Decide best action according to the agent
-        reward = self.physics(action) # Execute that action
+        reward, terminal = self.physics(action) # Execute that action
         next_state = self.get_state() # Get next state
-        self.agent.update_Qvalue(prev_state, action, next_state, reward)
+        self.agent.update_Qvalue(prev_state, action, next_state, reward, terminal)
 
     """ Run the game loop and make the agent play """
     def run(self):

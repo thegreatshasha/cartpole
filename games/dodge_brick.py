@@ -44,9 +44,10 @@ class DodgeBrick(AbstractGame):
 
     def draw(self):
         # Draw to the terminal here #
-        print(chr(27) + "[2J")
-        print self.board
-        print self.score
+        #print(chr(27) + "[2J")
+        #print self.board
+        #print self.score
+        pass
 
     def physics(self, action):
         # Agent chooses the player's velocity
@@ -65,21 +66,25 @@ class DodgeBrick(AbstractGame):
         self.board[tuple(self.enemy['pos'])] = 2
         #print self.player, self.enemy
         if np.array_equal(self.player['pos'], self.enemy['pos']):
-            print "Boom"
-            self.score += -50
-            return -30
+            #print "Boom"
+            self.score -= 30
+            return -30, True
         else:
             self.score += 1
-            return 1
+            return 1, False
 
     def run(self):
         for i in range(10000000):
             time.sleep(0.01)
-            if i%1000 == 0:
+            if i%200==0:
+                print self.score, i
                 self.score = 0
+            #if i%2000 == 0:
+            #    self.score = 0
             self.update()
             self.draw()
+            #self.agent.update_epsilon(i, 50000)
 
 if __name__ == "__main__":
-    db = DodgeBrick({'size': (3,3)}, QAgent)
+    db = DodgeBrick({'size': (4,4)}, RandomAgent)
     db.run()

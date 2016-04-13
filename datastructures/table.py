@@ -11,8 +11,8 @@ class Table:
         # If the user has not provided an intitialization for the table
         if not len(values):
             dims = tuple([r.shape[0]-1 for r in ranges])
-            values = np.zeros(dims)
-            #values = np.random.random_sample(size=dims)
+            #values = np.zeros(dims)
+            values = np.random.random_sample(size=dims)
 
         self.values = values
 

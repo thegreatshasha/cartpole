@@ -11,17 +11,22 @@ class QAgent(AbstractAgent):
         self.actions = rngs[-1] # Last range is action range
 
         # Q learning parameters
-        self.epsilon = 0.3 # Randomness
-        self.gamma = 0.8 # Future discount factor
-        self.eta = 0.3
+        self.epsilon = 1.0 # Randomness
+        self.gamma = 0.9 # Future discount factor
+        self.eta = 0.8
 
-    def update_Qvalue(self, pstate, action, nstate, reward):
+    def update_epsilon(self, step, total):
+        self.epsilon = max((total - float(step))/total, 0.1)
+
+    def update_Qvalue(self, pstate, action, nstate, reward, terminal):
         max_Qval = max(self.Qvals[nstate])
         value = reward + self.gamma * max_Qval
-        pstate_action = pstate + [action]
+        pstate_action = np.concatenate([pstate, [action]])
         p_Qval = self.Qvals[pstate_action]
-
-        self.Qvals[pstate_action] = p_Qval + self.eta * (reward + self.gamma * max_Qval - p_Qval)
+        if terminal:
+            self.Qvals[pstate_action] = self.eta * reward
+        else:
+            self.Qvals[pstate_action] = p_Qval + self.eta * (reward + self.gamma * max_Qval - p_Qval)
 
     def choose_action(self, state):
         if np.random.random() <= self.epsilon:
