@@ -1,187 +1,48 @@
-import os
-os.environ['SDL_VIDEODRIVER'] = 'dummy'
+from abstract import AbstractGame
+#import os
+#os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
-import pygame
+#import pygame
 import numpy as np
 import random
 import time
 
-# Helpers here
-def transform(dimensions, factor):
-	#### VERY INEFFICIENT, CHANGE THIS ASAP
-	return tuple([factor*d for d in dimensions])
+class DodgeBrick(AbstractGame):
 
-def pixel2rgb(pixels):
-	red = pixels / 2**16
-	green = (pixels % 2**16) / 2**8
-	blue = (pixels % 2**8)
-	return np.dstack((red, blue, green))
-
-COLORS = {
-	'black': (0,0,0),
-	'red': (255, 0, 0),
-	'blue': (0,0,255)
-}
-
-class GameObject:
-	def __init__(self, config):
-		self.x, self.y, self.width, self.height = config['dimensions']
-		self.type = config['type']
-		self.color = config['color']
-
-	def get_dimensions(self):
-		return (self.x, self.y, self.width, self.height)
-
-class GameManager:
-	def __init__(self):
-		pygame.init()
+    def __init__(self, config, player):
+        #pygame.init()
 		self.size = (4,4)
-		self.scalefactor = 10
-		self.transformed_size = transform(self.size, self.scalefactor)
-
-		#self.score = 0
 		self.screen = pygame.display.set_mode(self.transformed_size)
-		self.enemies = []
-		self.player = None
-		self.actions = [-1, +1]
+		self.player = player
 
-		self.record = False
-		self.record_zoom = 10
-		self.record_frames = []
+        """ Represent board by matrix of zeros. 1 denotes agent. 2 denotes enemy """
+        self.board = np.zeros()
 
-		self.record_file = 'games/frames'
+        """ Physics variables """
+        self.velocity = 0 # Left right velocity, can be -1, 0, 1. Decided each turn
 
-	""" Proxy methods. These methods provide a proxy for the arcade learning environment"""
-	def getMinimalActionSet(self):
-		return np.array([0, 1])
+    def get_state(self):
+        """ Flatten board and return """
+        pass
 
-	def loadROM(self, romfile):
-		print "Why the hell do i need a romfile?"
+    def get_ranges(self):
+        """ Return state ranges for board and actions """
+        pass
 
-	def lives(self):
-		return 1
+    def draw(self):
+        """ Draw to the terminal here """
+        pass
 
-	def reset_game(self):
-		""" We should try resetting the game and see what happens """
-		return 1
+    def physics(self):
+        """ Update agent and enemy position via velocity. Detect collisions as well"""
+        pass
 
-	def game_over(self):
-		return False
+    def update(self):
+        pass
 
-	def getScreenDims(self):
-		return self.transformed_size
-
-	def zoomForRecording(self, rgb):
-		return np.repeat(np.repeat(rgb,self.record_zoom,axis=0),self.record_zoom,axis=1)
-
-	def recordFrames(self, rgb):
-		if self.record_frames:
-			self.record_frames.append(self.zoomForRecording(rgb))
-			np.save(self.record_file, self.record_frames)
-			#self.video.run(self.zoomForRecording(rgb))
-
-	def getScreenRGB(self):
-
-		#rgb = pygame.surfarray.pixels3d( self.screen )
-		rgb  = np.zeros((self.transformed_size + (3,))).astype('uint8')
-		for y in xrange(self.transformed_size[1]):
-			for x in xrange(self.transformed_size[0]):
-				rgb[y,x,:] = [t for t in self.screen.get_at((x,y))][:-1]
-
-		rgb_transformed = np.flipud(np.rot90(rgb, k=1))
-		return rgb
-
-	def getScreenGrayScale(self):
-		rgb = self.getScreenRGB()
-		self.recordFrames(rgb)
-		return np.dot(rgb[...,:3], [0.299, 0.587, 0.144])
-
-	def act(self, index):
-		self.player.x = np.clip(self.player.x + self.actions[index], 0, self.size[0]-1)
-		return self.run()
-
-	def add_object(self, config):
-		obj = GameObject(config)
-
-		if obj.type == 'enemy':
-			self.enemies.append(obj)
-		else:
-			self.player = obj
-
-	def handle_events(self):
-		events = pygame.event.get()
-		for event in events:
-		    if event.type == pygame.KEYDOWN:
-		        if event.key == pygame.K_LEFT:
-		         	self.act(0)
-		        if event.key == pygame.K_RIGHT:
-		            self.act(1)
-
-	def draw_objects(self):
-		for obj in self.enemies:
-			pygame.draw.rect(self.screen, obj.color, transform(obj.get_dimensions(), self.scalefactor))
-
-		pygame.draw.rect(self.screen, self.player.color, transform(self.player.get_dimensions(), self.scalefactor))
-
-	def update(self):
-		#import pdb; pdb.set_trace()
-		for obj in self.enemies:
-			obj.y += 1
-			if obj.y > self.size[1]:
-				obj.y = 0
-				obj.x = random.choice(range(0, self.size[0]))
-
-			if obj.x == self.player.x and obj.y == self.player.y:
-				reward = -30
-				print "boom"
-				return reward
-
-		reward = 1
-
-		return reward
-
-	def run(self):
-
-		self.screen.fill(COLORS['black'])
-
-		reward = self.update()
-
-			# player random action
-		#self.handle_events()
-			#self.act(random.choice([0,1]))
-
-		# draw objects
-		self.draw_objects()
-
-		pygame.display.flip()
-		return reward
-
-class RandomAgent:
-
-	def __init__(self, ale):
-		print "Hi"
-		self.ale = ale
-		self.score = 0
-
-	def run(self):
-		while True:
-			time.sleep(0.1)
-			self.score += self.ale.act(random.choice([0, 1]))
-			print "Score: %d" % self.score
-
-
+    def run(self):
+        pass
 
 if __name__ == "__main__":
-	gm = GameManager()
-	gm.add_object({
-		'dimensions': (1,3,1,1),
-		'type': 'player',
-		'color': COLORS['blue']
-	})
-	gm.add_object({
-		'dimensions': (0,1,1,1),
-		'type': 'enemy',
-		'color': COLORS['red']
-	})
-	agent = RandomAgent(gm)
-	agent.run()
+    db = DodgeBrick({}, {})
+    db.get_state()

@@ -1,26 +1,26 @@
 # Abstract class of a game
 
-class AbstractGame(Interface):
+class AbstractGame:
 
     """ Takes in config hash and player object and initializes everything """
     def __init__(self, config, player):
-        raise("Not implemented")
+        raise NotImplementedError()
 
     """ Returns the current state as a list of n  """
     def get_state(self):
-        raise("Not implemented!")
+        raise NotImplementedError()
 
     """ Return ranges for each n state_variable and 1 more for the state variable"""
     def get_ranges(self):
-        raise("Not implemented!")
+        raise NotImplementedError()
 
     """ Draw something to the screen """
     def draw(self):
-        raise("Not implemented")
+        raise NotImplementedError()
 
     """ Apply physics here """
     def physics(self):
-        raise("Not implemented!")
+        raise NotImplementedError()
 
     """ Update the game state """
     def update(self):
@@ -34,4 +34,4 @@ class AbstractGame(Interface):
 
     """ Run the game loop and make the agent play """
     def run(self):
-        raise("Not implemented!")
+        raise NotImplementedError()
