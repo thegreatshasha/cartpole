@@ -11,3 +11,7 @@
 ## Upcoming
 * Continuous domain reinforcement learning
 * Apprenticeship learning
+
+## Contributing
+* Please have a look at the issues. Comment if you want to work on one
+* You can also suggest your own features etc
