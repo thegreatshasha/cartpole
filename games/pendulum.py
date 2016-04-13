@@ -60,6 +60,8 @@ class GameManager:
         self.screen.blit(scoretext, (0, 457))
 
     def draw(self):
+        self.screen.fill(self.colors['black'])
+
         pygame.draw.circle(self.screen, self.colors['blue'], (int(self.peg.x), int(self.peg.y)), 10)
         pygame.draw.circle(self.screen, self.colors['blue'], self.ball, 5)
         pygame.draw.line(self.screen, self.colors['blue'], self.peg, self.ball)
@@ -99,7 +101,6 @@ class GameManager:
 
     def run(self):
         # Core algorithm, everything happens here
-        self.screen.fill(self.colors['black'])
         prev_state = self.get_state()
         action = self.player.choose_action(prev_state) # Decide best action according to the agent
         self.update(action) # Execute that action
