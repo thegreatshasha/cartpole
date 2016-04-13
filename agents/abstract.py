@@ -10,7 +10,3 @@ class AbstractAgent:
     """ Choose the best action according for the current state """
     def choose_action(self, state):
         raise("Not implemented!")
-
-    """ Get reward for a prev_state, action, next_state transition """
-    def get_reward(self, prev_state, next_state, action):
-        raise("Not implemented!")

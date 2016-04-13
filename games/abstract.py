@@ -3,7 +3,7 @@
 class AbstractGame:
 
     """ Takes in config hash and player object and initializes everything """
-    def __init__(self, config, player):
+    def __init__(self, config, Agent):
         raise NotImplementedError()
 
     """ Returns the current state as a list of n  """
@@ -19,18 +19,16 @@ class AbstractGame:
         raise NotImplementedError()
 
     """ Apply physics here """
-    def physics(self):
+    def physics(self, action):
         raise NotImplementedError()
 
     """ Update the game state """
     def update(self):
         prev_state = self.get_state()
-        action = self.player.choose_action(prev_state) # Decide best action according to the agent
-        self.update(action) # Execute that action
+        action = self.agent.choose_action(prev_state) # Decide best action according to the agent
+        reward = self.physics(action) # Execute that action
         next_state = self.get_state() # Get next state
-        reward = self.player.get_reward(prev_state, next_state, action)
-        self.player.update_Qvalue(prev_state, action, next_state, reward)
-        self.draw()
+        self.agent.update_Qvalue(prev_state, action, next_state, reward)
 
     """ Run the game loop and make the agent play """
     def run(self):

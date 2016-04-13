@@ -1,9 +1,10 @@
 import numpy as np
 import random
 import math as m
-from table import Table
+from ..datastructures.table import Table
+from abstract import AbstractAgent
 
-class QAgent:
+class QAgent(AbstractAgent):
     def __init__(self, rngs):
         # Initialize the state action table
         self.Qvals = Table(ranges=rngs)
@@ -23,13 +24,7 @@ class QAgent:
         self.Qvals[pstate_action] = p_Qval + self.eta * (reward + self.gamma * max_Qval - p_Qval)
 
     def choose_action(self, state):
-        if random.random() <= self.epsilon:
+        if np.random.random() <= self.epsilon:
             return self.actions[np.random.choice(len(self.actions)-1)] # Choose any element but last
         else:
             return self.Qvals.max_action(state)
-
-    def get_reward(self, prev_state, next_state, action):
-        theta2 = next_state[0]
-        theta1 = prev_state[0]
-        omega = abs(next_state[1])
-        return 1000*omega*(m.cos(theta2) - m.cos(theta1))
