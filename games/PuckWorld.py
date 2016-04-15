@@ -6,14 +6,14 @@ from abstract import AbstractGame
 import numpy as np
 import random
 import time
-from ..agents.random import RandomAgent
-from ..agents.qlearning import QAgent
+from ..Agents.random import RandomAgent
+#from ..agents.qlearning import QAgent
 
 class PuckWorld(AbstractGame):
 
     def __init__(self, config, Agent):
         
-        self.size = config['size']
+        self.size = config
         
         self.agent = {}
         self.predator = {}
@@ -28,7 +28,7 @@ class PuckWorld(AbstractGame):
         self.agent['vel'] = np.array( [0,0] )
 
         self.food['radius']=2
-        self.food['pos'] = ( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] )
+        self.food['pos'] = np.array( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] ) 
         
         # Game player #
         self.player = Agent(self.get_ranges())
@@ -50,7 +50,7 @@ class PuckWorld(AbstractGame):
         #states 0,1,....size-1 for all posx,posy
         #states -10 to 10 for vx,vy of agent
         #actions 0,1,2,3 for agent
-        return [ np.arange(0, size, 1) for _ in range(6) ] + [ np.arange(-10,12,2) for _ in range(2) ]\
+        return [ np.arange(0, self.size, 1) for _ in range(6) ] + [ np.arange(-10,12,2) for _ in range(2) ]\
         + [ np.arange(0, 4, 1) ]
         
 
@@ -59,13 +59,13 @@ class PuckWorld(AbstractGame):
 
     def checkbounce(self,agent):
         
-        if agent['pos'][0] > size:
-            agent['pos'][0] = size
-            agent['vel'][0] = -1.0 * a['vel'][0]
+        if agent['pos'][0] > self.size:
+            agent['pos'][0] = self.size
+            agent['vel'][0] = -1.0 * agent['vel'][0]
         
-        if agent['pos'][1] > size:
-            agent['pos'][1] = size
-            agent['vel'][1] = -1.0 * a['vel'][1]
+        if agent['pos'][1] > self.size:
+            agent['pos'][1] = self.size
+            agent['vel'][1] = -1.0 * agent['vel'][1]
 
        
     def physics(self, action):
@@ -100,9 +100,9 @@ class PuckWorld(AbstractGame):
             punishment=1.0/(p2a+1)*-1000.0
         a2f= p2a=np.sqrt(np.sum(np.square(self.agent['pos']-self.food['pos'])))
         reward=1.0/(a2f+1)*1.0
-        score+=reward+punishment
+        self.score+=reward+punishment
 
-        return score,False
+        return self.score,False
 
     def update(self):
         self.draw()
@@ -110,7 +110,7 @@ class PuckWorld(AbstractGame):
         action = self.player.choose_action(prev_state) # Decide best action according to the agent
         reward, terminal = self.physics(action) # Execute that action
         next_state = self.get_state() # Get next state
-        self.agent.update_Qvalue(prev_state, action, next_state, reward, terminal)
+        self.player.update_Qvalue(prev_state, action, next_state, reward, terminal)
 
     def run(self):
         for i in range(10000000):
@@ -125,5 +125,5 @@ class PuckWorld(AbstractGame):
             #self.agent.update_epsilon(i, 50000)
 
 if __name__ == "__main__":
-    db = PuckWorld({'size': (4,4)}, RandomAgent)
+    db = PuckWorld(4, RandomAgent)
     db.run()
