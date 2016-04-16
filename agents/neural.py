@@ -17,7 +17,8 @@ class NeuralLearner(AbstractAgent):
         self.max_steps = 100
         self.max_epochs = 20
         self.batch_size = 32
-        self.long_press_times = 1 """ Disable this functionality initially """
+        self.long_press_times = 1
+        """ Disable this functionality initially """
 
         """ Q learning specific parameters """
         self.gamma = 0.9

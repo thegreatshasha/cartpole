@@ -21,7 +21,3 @@ class AbstractGame:
     """ Execute the action and return reward """
     def act(self, action):
         raise NotImplementedError()
-
-    """ Run the game loop and make the agent play """
-    def run(self):
-        raise NotImplementedError()

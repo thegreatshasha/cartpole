@@ -11,7 +11,7 @@ from ..agents.qlearning import QAgent
 
 class DodgeBrick(AbstractGame):
 
-    def __init__(self, config, Agent):
+    def __init__(self, config):
         #pygame.init()
         self.size = config['size']
         #self.screen = pygame.display.set_mode(self.transformed_size)
@@ -38,6 +38,9 @@ class DodgeBrick(AbstractGame):
     def get_ranges(self):
         # Return state ranges for board and actions #
         return [np.arange(0, 2+1+1, 1) for el in self.board.flatten()] + [np.arange(-1, 1+1+1, 1)]
+
+    def getPossibleActions(self):
+        return np.array([-1, 0, 1])
 
     def draw(self):
         # Draw to the terminal here #
@@ -69,19 +72,3 @@ class DodgeBrick(AbstractGame):
         else:
             self.score += 1
             return 1, False
-
-    def run(self):
-        for i in range(10000000):
-            time.sleep(0.01)
-            if i%200==0:
-                print self.score, i
-                self.score = 0
-            #if i%2000 == 0:
-            #    self.score = 0
-            self.update()
-            self.draw()
-            #self.agent.update_epsilon(i, 50000)
-
-if __name__ == "__main__":
-    db = DodgeBrick({'size': (4,4)}, RandomAgent)
-    db.run()

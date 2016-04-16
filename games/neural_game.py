@@ -75,6 +75,3 @@ class DodgeBrick(AbstractGame):
 
 if __name__ == "__main__":
     # Create the keras network here
-
-    db = DodgeBrick({'size': (4,4)}, RandomAgent)
-    db.run()
