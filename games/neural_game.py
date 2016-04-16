@@ -7,7 +7,7 @@ import numpy as np
 import random
 import time
 from ..agents.random import RandomAgent
-from ..agents.qlearning import QAgent
+from ..agents.neural import NeuralLearner
 
 class DodgeBrick(AbstractGame):
 
@@ -27,6 +27,9 @@ class DodgeBrick(AbstractGame):
 
         self.player['pos'] = np.array([self.size[0]-1, np.random.choice(self.size[0])])
         self.player['vel'] = np.array([0, 0])
+
+        # Game player #
+        self.agent = Agent(self.get_ranges())
 
         # Game statistics
         self.score = 0
@@ -70,18 +73,8 @@ class DodgeBrick(AbstractGame):
             self.score += 1
             return 1, False
 
-    def run(self):
-        for i in range(10000000):
-            time.sleep(0.01)
-            if i%200==0:
-                print self.score, i
-                self.score = 0
-            #if i%2000 == 0:
-            #    self.score = 0
-            self.update()
-            self.draw()
-            #self.agent.update_epsilon(i, 50000)
-
 if __name__ == "__main__":
+    # Create the keras network here
+
     db = DodgeBrick({'size': (4,4)}, RandomAgent)
     db.run()

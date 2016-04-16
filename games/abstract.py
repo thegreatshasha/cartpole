@@ -18,17 +18,9 @@ class AbstractGame:
     def draw(self):
         raise NotImplementedError()
 
-    """ Apply physics here """
-    def physics(self, action):
+    """ Execute the action and return reward """
+    def act(self, action):
         raise NotImplementedError()
-
-    """ Update the game state """
-    def update(self):
-        prev_state = self.get_state()
-        action = self.agent.choose_action(prev_state) # Decide best action according to the agent
-        reward, terminal = self.physics(action) # Execute that action
-        next_state = self.get_state() # Get next state
-        self.agent.update_Qvalue(prev_state, action, next_state, reward, terminal)
 
     """ Run the game loop and make the agent play """
     def run(self):

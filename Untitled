@@ -1,0 +1,8 @@
+def ncr(n, r):
+  if r>n-r:
+    r=n-r
+
+  ans = 1
+
+  for i in xrange(n-r+1, n+1):
+    print ans*((n-r+1)/i)
