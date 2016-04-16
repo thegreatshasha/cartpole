@@ -44,10 +44,10 @@ if __name__ == "__main__":
     # #sgd = SGD(lr=0.0001, decay=1e-6)
     # net.compile(loss='mean_squared_error', optimizer=adadelta)
 
-    """ Choose agent, random agent """
+    """ Initialize all 3 agents, random, Qagent and neural """
     ra = RandomAgent(game.get_ranges())
     ta = QAgent(game.get_ranges())
-    #agent = Agent(game.get_ranges(), network)
+    na = Agent(game.get_ranges(), network)
 
     """ Initialize manager and run experiment """
     manager = GameManager(game, ta)
