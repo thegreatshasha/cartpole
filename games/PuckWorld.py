@@ -1,6 +1,9 @@
 from abstract import AbstractGame
 #import os
 #os.environ['SDL_VIDEODRIVER'] = 'dummy'
+import pygame
+from vec2d import Vec2d as Vector2
+import math as m
 
 #import pygame
 import numpy as np
@@ -19,15 +22,15 @@ class PuckWorld(AbstractGame):
         self.predator = {}
         self.food = {}
         #initially predetor,agent and food anywhere on board
-        self.predator['radius']=40
+        self.predator['radius']=20
         self.predator['pos'] = np.array( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] )
         self.predator['vel'] = np.array( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] )
         
         self.agent['radius']=10
         self.agent['pos'] = np.array( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] )
-        self.agent['vel'] = np.array( [0,0] )
+        self.agent['vel'] = np.array( [0.0,0.0] )
 
-        self.food['radius']=2
+        self.food['radius']=10
         self.food['pos'] = np.array( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] ) 
         
         # Game player #
@@ -35,6 +38,12 @@ class PuckWorld(AbstractGame):
 
         # Game statistics
         self.score = 0
+
+        #display code
+        pygame.init()
+        self.size_vec = Vector2(self.size +100, self.size+100)
+        self.screen = pygame.display.set_mode(self.size_vec)
+        self.colors = {'white':(255,255,255), 'red': (255,0,0), 'blue': (0,0,255), 'black': (0,0,0), 'green':(0,255,0)}
 
 
     def get_state(self):
@@ -55,25 +64,49 @@ class PuckWorld(AbstractGame):
         
 
     def draw(self):
-        pass
-
+        self.screen.fill(self.colors['black'])
+        pygame.draw.rect(self.screen, self.colors['white'], (0,0,self.size,self.size), 2)
+        
+        pygame.draw.circle(self.screen, self.colors['green'], (int(self.food['pos'][0]), int(self.food['pos'][1])), self.food['radius'])
+        pygame.draw.circle(self.screen, self.colors['blue'], (int(self.agent['pos'][0]),int(self.agent['pos'][1])),self.agent['radius'])
+        pygame.draw.circle(self.screen, self.colors['red'], (int(self.predator['pos'][0]), int(self.predator['pos'][1])),self.predator['radius'])
+        pygame.display.flip()
+        import pdb;pdb.set_trace()
     def checkbounce(self,agent):
         
-        if agent['pos'][0] > self.size:
+      
+        if agent['pos'][0] > self.size: 
             agent['pos'][0] = self.size
-            agent['vel'][0] = -1.0 * agent['vel'][0]
+            agent['vel']=np.array([0.0,0.0])
         
-        if agent['pos'][1] > self.size:
+        elif agent['pos'][0]<0.0:
+            agent['pos'][0] = 0.0
+            agent['vel']=np.array([0.0,0.0])
+       
+        if agent['pos'][1] >self.size:   
             agent['pos'][1] = self.size
-            agent['vel'][1] = -1.0 * agent['vel'][1]
+            agent['vel']=np.array([0.0,0.0])
+        
+        elif agent['pos'][1] <0.0:
+            agent['pos'][1] = 0.0
+            agent['vel']=np.array([0.0,0.0])
+
 
        
     def physics(self, action):
         
         
         #update agent vel
-        action_legend = { 0 : np.array( [1,0] ), 1 : np.array( [-1,0] ), 2 : np.array( [0,1] ), 3 : np.array( [0,-1] ) }  
+        action_legend = { 0 : np.array( [1.0,0.0] ), 1 : np.array( [-1.0,0.0] ), 2 : np.array( [0.0,1.0] ), 3 : np.array( [0.0,-1.0] ) }  
         self.agent['vel'] = self.agent['vel'] + action_legend[action]
+        action_constant=2
+        if self.agent['vel'][0]>10.0:
+            self.agent['vel'][0]=10.0
+
+        if self.agent['vel'][0]<-10.0:
+            self.agent['vel'][0]=-10.0
+
+
         
         #update agent position
         self.agent['pos'] = self.agent['pos'] + self.agent['vel']
@@ -82,24 +115,26 @@ class PuckWorld(AbstractGame):
         self.checkbounce(self.agent)
 
         #update predator vel
-        predator_to_agent=self.agent['pos']-self.agent['pos']
-        self.predator['vel']=0.5*predator_to_agent
+        predator_velocity_constant=1.0/self.size
+        predator_to_agent=self.agent['pos']-self.predator['pos']
+        self.predator['vel']=predator_velocity_constant*predator_to_agent
         
         #update predator pos
         self.predator['pos']=self.predator['pos']+self.predator['vel']
 
+
         #update food position
-        food_rebirth_rate=np.random.random_sample()*5
-        if(np.random.random_sample()*100<food_rebirth_rate):
-            self.food['pos'] = ( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] )
+        food_rebirth_rate=np.random.random_sample()*5.0
+        if(np.random.random_sample()*100.0<food_rebirth_rate):
+            self.food['pos'] = np.array( [ np.random.random_sample()*self.size , np.random.random_sample()*self.size ] )
 
        #scoring
         reward,punishment=0.0,0.0
         p2a=np.sqrt(np.sum(np.square(predator_to_agent)))
         if p2a<self.predator['radius']:
-            punishment=1.0/(p2a+1)*-1000.0
+            punishment=1.0/(p2a+1.0)*-1.0
         a2f= p2a=np.sqrt(np.sum(np.square(self.agent['pos']-self.food['pos'])))
-        reward=1.0/(a2f+1)*1.0
+        reward=1.0/(a2f+1.0)*1.0
         self.score+=reward+punishment
 
         return self.score,False
@@ -115,15 +150,16 @@ class PuckWorld(AbstractGame):
     def run(self):
         for i in range(10000000):
             time.sleep(0.01)
-            if i%200==0:
+            if i%1==0:
                 print self.score, i
-                self.score = 0
+                self.score = 0.0
             #if i%2000 == 0:
             #    self.score = 0
             self.update()
+        pygame.quit()
             
             #self.agent.update_epsilon(i, 50000)
 
 if __name__ == "__main__":
-    db = PuckWorld(4, RandomAgent)
+    db = PuckWorld(480, RandomAgent)
     db.run()
