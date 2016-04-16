@@ -10,6 +10,7 @@ import numpy as np
 import random
 import time
 from ..Agents.random import RandomAgent
+from ..Agents.qlearning import QAgent
 #from ..agents.qlearning import QAgent
 
 class PuckWorld(AbstractGame):
@@ -60,7 +61,7 @@ class PuckWorld(AbstractGame):
         #states -10 to 10 for vx,vy of agent
         #actions 0,1,2,3 for agent
         return [ np.arange(0, self.size, 1) for _ in range(6) ] + [ np.arange(-10,12,2) for _ in range(2) ]\
-        + [ np.arange(0, 4, 1) ]
+        + [ np.arange(0, 5, 1) ]
         
 
     def draw(self):
@@ -94,12 +95,16 @@ class PuckWorld(AbstractGame):
 
        
     def physics(self, action):
-        
-        
+   
         #update agent vel
         action_legend = { 0 : np.array( [1.0,0.0] ), 1 : np.array( [-1.0,0.0] ), 2 : np.array( [0.0,1.0] ), 3 : np.array( [0.0,-1.0] ) }  
-        self.agent['vel'] = self.agent['vel'] + action_legend[action]
-        action_constant=2
+        action_constant=1.1
+        #print 'action is:%d'%action
+        self.agent['vel'] = self.agent['vel'] + action_legend[action]*action_constant
+        #print "agent vel:"
+        #print self.agent['vel']
+       
+        
         if self.agent['vel'][0]>10.0:
             self.agent['vel'][0]=10.0
 
@@ -161,5 +166,5 @@ class PuckWorld(AbstractGame):
             #self.agent.update_epsilon(i, 50000)
 
 if __name__ == "__main__":
-    db = PuckWorld(480, RandomAgent)
+    db = PuckWorld(480, QAgent)
     db.run()
