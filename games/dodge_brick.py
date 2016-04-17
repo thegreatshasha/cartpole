@@ -33,7 +33,8 @@ class DodgeBrick(AbstractGame):
 
     def get_state(self):
         # Flatten board and return #
-        return self.board.flatten()
+        #return self.board.flatten()
+        return self.board
 
     def get_ranges(self):
         # Return state ranges for board and actions #

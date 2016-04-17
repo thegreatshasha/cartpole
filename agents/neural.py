@@ -2,11 +2,12 @@ from abstract import AbstractAgent
 from ..datastructures.table import Table
 from ..datastructures.ring_buffer import RingBuffer
 from ..helpers.common import select_with_probability
+import numpy as np
 import random
 
 class NeuralLearner(AbstractAgent):
     """ Takes in a set of n+1 ranges as input, n for state variables and 1 for actions """
-    def __init__(self, rngs, network):
+    def __init__(self, rngs, network, width, height):
         self.possible_actions = rngs[-1]
 
         """ Our machine learning model """
@@ -53,8 +54,8 @@ class NeuralLearner(AbstractAgent):
     def choose_action(self, state):
         #Take the previous 4 observations
         history = self.__get_history(state)
-        history_batch = np.array([state])
-        prediction = model.predict(history_batch)[0]
+        history_batch = np.array([history])
+        prediction = self.network.predict(history_batch)[0]
 
         best_action = self.possible_actions[np.argmax(prediction)]
         random_action = random.choice(self.possible_actions)
@@ -85,7 +86,7 @@ class NeuralLearner(AbstractAgent):
     """ Gets the neural net output duh! """
     def __get_network_output(state):
         history_batch = np.array([state])
-        prediction = model.predict(history_batch)[0]
+        prediction = self.network.predict(history_batch)[0]
         return prediction
 
     """ Sample a random minibatch from the episodic memory and return it """
