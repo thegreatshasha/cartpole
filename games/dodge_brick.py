@@ -6,7 +6,7 @@ from abstract import AbstractGame
 import numpy as np
 import random
 import time
-from ..agents.random import RandomAgent
+from ..agents.random_a import RandomAgent
 from ..agents.qlearning import QAgent
 
 class DodgeBrick(AbstractGame):

@@ -1,7 +1,7 @@
 from base import BaseManager
 from ..games.dodge_brick import DodgeBrick
 from ..agents.neural import NeuralLearner
-from ..agents.random import RandomAgent
+from ..agents.random_a import RandomAgent
 from ..agents.qlearning import QAgent
 import keras
 from keras.models import Sequential
@@ -53,4 +53,4 @@ if __name__ == "__main__":
 
     """ Initialize manager and run experiment """
     manager = GameManager(game, na)
-    manager.run(epochs=10, steps=10000)
+    manager.run(epochs=10, steps=1000)
