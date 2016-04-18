@@ -60,7 +60,7 @@ class PuckWorld(AbstractGame):
         #states 0,1,....size-1 for all posx,posy
         #states -10 to 10 for vx,vy of agent
         #actions 0,1,2,3 for agent
-        return [ np.arange(0, self.size, 1) for _ in range(6) ] + [ np.arange(-10,12,2) for _ in range(2) ]\
+        return [ np.arange(0, self.size, 100) for _ in range(6) ] + [ np.arange(-10,12,4) for _ in range(2) ]\
         + [ np.arange(0, 5, 1) ]
         
 

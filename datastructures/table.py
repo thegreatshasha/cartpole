@@ -1,5 +1,6 @@
 import numpy as np
 import math as m
+import pdb
 
 class Table:
     # Define a state table indexed not by indices but by state values. Binary search used for finding matching state
@@ -12,6 +13,8 @@ class Table:
         if not len(values):
             dims = tuple([r.shape[0]-1 for r in ranges])
             #values = np.zeros(dims)
+            
+            pdb.set_trace()
             values = np.random.random_sample(size=dims)
 
         self.values = values
