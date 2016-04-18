@@ -7,7 +7,7 @@ import random
 
 class NeuralLearner(AbstractAgent):
     """ Takes in a set of n+1 ranges as input, n for state variables and 1 for actions """
-    def __init__(self, rngs, network, width, height):
+    def __init__(self, rngs, network, shape):
         self.legal_actions = rngs[-1][:-1]
 
         """ Our machine learning model """
@@ -28,7 +28,7 @@ class NeuralLearner(AbstractAgent):
         self.update_frequency = 4
 
         """ The 4 parameters of our transition table """
-        self.states = RingBuffer(shape=(self.max_steps, width, height))
+        self.states = RingBuffer(shape=(self.max_steps,)+shape)
         self.actions = RingBuffer(shape=(self.max_steps, 1))
         self.rewards = RingBuffer(shape=(self.max_steps, 1))
         self.terminals = RingBuffer(shape=(self.max_steps, 1))

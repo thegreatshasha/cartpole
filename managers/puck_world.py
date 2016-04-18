@@ -1,5 +1,5 @@
 from base import BaseManager
-from ..games.dodge_brick import DodgeBrick
+from ..games.puck_world import PuckWorld
 from ..agents.neural import NeuralLearner
 from ..agents.random_a import RandomAgent
 from ..agents.qlearning import QAgent
@@ -15,6 +15,7 @@ class GameManager(BaseManager):
         for epoch in xrange(epochs):
             for step in xrange(steps):
                 self.update()
+                self.game.draw()
                 self.agent.update_epsilon(step+epoch*steps, epochs*steps)
                 if step%200==0:
                     print "Epsilon: %f, score: %f, step: %f"%(self.agent.epsilon, self.game.score, step)
@@ -26,7 +27,9 @@ if __name__ == "__main__":
     history_length = 4
 
     """ Choose game """
-    game = DodgeBrick({'size': (4,4)})
+    game = PuckWorld(480, RandomAgent)
+    st = game.get_state()
+    #import pdb; pdb.set_trace()
     legal_actions = game.getPossibleActions()
     #import pdb; pdb.set_trace()
 
@@ -35,21 +38,22 @@ if __name__ == "__main__":
     """ Switch to dynamic dimension here """
     # net.add(Convolution2D(8, 2, 2, subsample=(1,1), input_shape=(history_length, 4, 4)))
     # net.add(Activation('relu'))
-    net.add(Convolution2D(8, 1, 1, subsample=(1,1), input_shape=(history_length, 4, 4)))
+    # just modify network here
+    net.add(Flatten(input_shape=(history_length, 8)))
+    net.add(Dense(32))
     net.add(Activation('relu'))
-    net.add(Flatten())
-    net.add(Dense(16))
+    net.add(Dense(64))
     net.add(Activation('relu'))
     net.add(Dense(legal_actions.shape[0]))
     #rmsp = keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-6)
     adadelta = keras.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-6)
     #sgd = SGD(lr=0.0001, decay=1e-6)
-    net.compile(loss='mean_squared_error', optimizer=adadelta)
+    net.compile(loss='categorical_crossentropy', optimizer=adadelta)
 
     """ Initialize all 3 agents, random, Qagent and neural """
-    ra = RandomAgent(game.get_ranges())
-    ta = QAgent(game.get_ranges())
-    na = NeuralLearner(game.get_ranges(), net, (4, 4))
+    #ra = RandomAgent(game.get_ranges())
+    #ta = QAgent(game.get_ranges())
+    na = NeuralLearner(game.get_ranges(), net, st.shape)
 
     """ Initialize manager and run experiment """
     manager = GameManager(game, na)
