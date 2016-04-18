@@ -22,7 +22,7 @@ class NeuralLearner(AbstractAgent):
 
         """ Q learning specific parameters """
         self.gamma = 0.9
-        self.epsilon = 0.1
+        self.epsilon = 1.0
         #self.max_lives = 2
         self.update_frequency = 4
 
