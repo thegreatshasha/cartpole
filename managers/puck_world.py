@@ -57,4 +57,4 @@ if __name__ == "__main__":
 
     """ Initialize manager and run experiment """
     manager = GameManager(game, na)
-    manager.run(epochs=10, steps=1000)
+    manager.run(epochs=10, steps=100000)

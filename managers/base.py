@@ -18,11 +18,20 @@ class BaseManager:
         """ Run the update for however many steps etc you want """
         raise NotImplementedError()
 
+    def long_press(self, action):
+        terminal = False
+        reward = 0
+        for i in range(self.agent.long_press_times):
+            r, t = self.game.act(action)
+            reward += r
+            terminal = terminal and t
+        return reward, terminal
+
     def update(self):
         """ Run a single update step """
         prev_state = self.game.get_state()
         action = self.agent.choose_action(prev_state) # Decide best action according to the agent
-        reward, terminal = self.game.act(action) # Execute that action
+        reward, terminal = self.long_press(action) # Execute that action
         next_state = self.game.get_state() # Get next state
         self.agent.update_Qvalue(prev_state, action, next_state, reward, terminal)
 

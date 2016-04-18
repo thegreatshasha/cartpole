@@ -2,7 +2,7 @@ from abstract import AbstractGame
 #import os
 #os.environ['SDL_VIDEODRIVER'] = 'dummy'
 import pygame
-from vec2d import Vec2d as Vector2
+from ..datastructures.vec2d import Vec2d as Vector2
 import math as m
 
 #import pygame
@@ -108,11 +108,11 @@ class PuckWorld(AbstractGame):
         #print self.agent['vel']
 
 
-        if self.agent['vel'][0]>10.0:
-            self.agent['vel'][0]=10.0
+        if self.agent['vel'][0]>5.0:
+            self.agent['vel'][0]=5.0
 
-        if self.agent['vel'][0]<-10.0:
-            self.agent['vel'][0]=-10.0
+        if self.agent['vel'][0]<-5.0:
+            self.agent['vel'][0]=-5.0
 
 
 

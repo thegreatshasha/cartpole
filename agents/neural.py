@@ -16,7 +16,6 @@ class NeuralLearner(AbstractAgent):
         """ Pass these all in to make them tweakable """
         self.history_length = 4
         self.max_steps = 100
-        self.max_epochs = 20
         self.batch_size = 64
         self.long_press_times = 1
         """ Disable this functionality initially """
@@ -70,7 +69,7 @@ class NeuralLearner(AbstractAgent):
 
     """ Anneal the greedy factor epsilon and fix it at 0.1 thereafter"""
     def update_epsilon(self, step, total):
-        self.epsilon = max((self.max_steps - float(self.step))/self.max_steps, 0.1)
+        self.epsilon = max((self.max_steps - float(self.step))/self.max_steps, 0.2)
         self.step += 1
 
     """ Do the actual gradient descent part """
