@@ -116,7 +116,11 @@ class PuckWorld(AbstractGame):
         if self.agent['vel'][0]<-5.0:
             self.agent['vel'][0]=-5.0
 
+        if self.agent['vel'][1]<-5.0:
+            self.agent['vel'][1]=-5.0
 
+        if self.agent['vel'][1]<-5.0:
+            self.agent['vel'][1]=-5.0
 
         #update agent position
         self.agent['pos'] = self.agent['pos'] + self.agent['vel']
@@ -125,7 +129,7 @@ class PuckWorld(AbstractGame):
         self.checkbounce(self.agent)
 
         #update predator vel
-        predator_velocity_constant=1.0/self.size
+        predator_velocity_constant=5.0/self.size
         predator_to_agent=self.agent['pos']-self.predator['pos']
         self.predator['vel']=predator_velocity_constant*predator_to_agent
 
