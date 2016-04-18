@@ -48,7 +48,7 @@ if __name__ == "__main__":
     #rmsp = keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-6)
     adadelta = keras.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=1e-6)
     #sgd = SGD(lr=0.0001, decay=1e-6)
-    net.compile(loss='categorical_crossentropy', optimizer=adadelta)
+    net.compile(loss='mean_squared_error', optimizer=adadelta)
 
     """ Initialize all 3 agents, random, Qagent and neural """
     #ra = RandomAgent(game.get_ranges())

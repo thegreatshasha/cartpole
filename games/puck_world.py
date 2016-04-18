@@ -148,5 +148,5 @@ class PuckWorld(AbstractGame):
         return self.score,False
 
 if __name__ == "__main__":
-    db = PuckWorld(480, RandomAgent)
+    db = PuckWorld(40, RandomAgent)
     db.run()

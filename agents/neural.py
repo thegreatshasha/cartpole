@@ -17,7 +17,7 @@ class NeuralLearner(AbstractAgent):
         self.history_length = 4
         self.max_steps = 100
         self.max_epochs = 20
-        self.batch_size = 32
+        self.batch_size = 64
         self.long_press_times = 1
         """ Disable this functionality initially """
 
