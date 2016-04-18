@@ -81,19 +81,21 @@ class PuckWorld(AbstractGame):
 
         if agent['pos'][0] > self.size:
             agent['pos'][0] = self.size
-            agent['vel']=np.array([0.0,0.0])
+            agent['vel'][0]=-agent['vel'][0]
+            #agent['vel']=np.array([0.0,0.0])
 
         elif agent['pos'][0]<0.0:
             agent['pos'][0] = 0.0
-            agent['vel']=np.array([0.0,0.0])
+            agent['vel'][0]=-agent['vel'][0]
+            #agent['vel']=np.array([0.0,0.0])
 
         if agent['pos'][1] >self.size:
             agent['pos'][1] = self.size
-            agent['vel']=np.array([0.0,0.0])
+            agent['vel'][1]=-agent['vel'][1]
 
         elif agent['pos'][1] <0.0:
             agent['pos'][1] = 0.0
-            agent['vel']=np.array([0.0,0.0])
+            agent['vel'][1]=-agent['vel'][1]
 
 
 
