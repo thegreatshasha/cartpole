@@ -69,7 +69,7 @@ class NeuralLearner(AbstractAgent):
 
     """ Anneal the greedy factor epsilon and fix it at 0.1 thereafter"""
     def update_epsilon(self, step, total):
-        self.epsilon = max((self.max_steps - float(self.step))/self.max_steps, 0.2)
+        self.epsilon = max((float(total) - float(step))/float(total), 0.2)
         self.step += 1
 
     """ Do the actual gradient descent part """
