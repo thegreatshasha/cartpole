@@ -4,6 +4,8 @@ from abstract import AbstractAgent
 class RandomAgent(AbstractAgent):
     def __init__(self, rngs):
         self.actions = rngs[-1] # Last range is action range
+        self.long_press_times = 1
+        self.epsilon = 1
 
     def update_Qvalue(self, pstate, action, nstate, reward, terminal):
         pass

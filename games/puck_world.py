@@ -46,7 +46,7 @@ class PuckWorld(AbstractGame):
         self.screen = pygame.display.set_mode(self.size_vec)
         self.colors = {'white':(255,255,255), 'red': (255,0,0), 'blue': (0,0,255), 'black': (0,0,0), 'green':(0,255,0)}
         self.action_arrow={}
-        
+
     def get_state(self):
         #state is a np array with all state variable values
         state = []
@@ -76,7 +76,7 @@ class PuckWorld(AbstractGame):
         1:((6+x, -2+y), (6+x, 2+y), (-2+x, 2+y), (-2+x, 6+y), (-6+x,0+y), (-2+x, -6+y), (-2+x, -2+y)),\
         2:((-2+x, -6+y), (2+x, -6+y), (2+x, 2+y), (6+x, 2+y), (0+x,6+y), (-6+x, 2+y), (-2+x, 2+y)),\
         3:((-2+x, 6+y), (2+x, 6+y), (2+x, -2+y), (6+x, -2+y), (0+x,-6+y), (-6+x, -2+y), (-2+x, -2+y))}
-       
+
         pygame.draw.circle(self.screen, self.colors['green'], (int(self.food['pos'][0]), int(self.food['pos'][1])), self.food['radius'])
         pygame.draw.circle(self.screen, self.colors['blue'], (int(self.agent['pos'][0]),int(self.agent['pos'][1])),self.agent['radius'])
         pygame.draw.circle(self.screen, self.colors['red'], (int(self.predator['pos'][0]), int(self.predator['pos'][1])),self.predator['radius'])
@@ -86,20 +86,20 @@ class PuckWorld(AbstractGame):
     def checkbounce(self,agent):
 
 
-        if agent['pos'][0] > self.size:
-            agent['pos'][0] = self.size
+        if agent['pos'][0] > self.size - 50:
+            agent['pos'][0] = self.size-50
             agent['vel']=np.array([0.0,0.0])
 
-        elif agent['pos'][0]<0.0:
-            agent['pos'][0] = 0.0
+        elif agent['pos'][0]<0.0+50:
+            agent['pos'][0] = 0.0+50
             agent['vel']=np.array([0.0,0.0])
 
-        if agent['pos'][1] >self.size:
-            agent['pos'][1] = self.size
+        if agent['pos'][1] >self.size-50:
+            agent['pos'][1] = self.size-50
             agent['vel']=np.array([0.0,0.0])
 
-        elif agent['pos'][1] <0.0:
-            agent['pos'][1] = 0.0
+        elif agent['pos'][1] <0.0+50:
+            agent['pos'][1] = 0.0+50
             agent['vel']=np.array([0.0,0.0])
 
 
@@ -137,7 +137,7 @@ class PuckWorld(AbstractGame):
         self.checkbounce(self.agent)
 
         #update predator vel
-        predator_velocity_constant=1.0/self.size
+        predator_velocity_constant=5.0/self.size
         predator_to_agent=self.agent['pos']-self.predator['pos']
         self.predator['vel']=predator_velocity_constant*predator_to_agent
 
@@ -154,8 +154,9 @@ class PuckWorld(AbstractGame):
         reward,punishment=0.0,0.0
         p2a=np.sqrt(np.sum(np.square(predator_to_agent)))
         #if p2a<self.predator['radius']:
-            #punishment=1.0/(p2a+1.0)*-1.0
-        a2f= p2a=np.sqrt(np.sum(np.square(self.agent['pos']-self.food['pos'])))
+        a2f=np.sqrt(np.sum(np.square(self.agent['pos']-self.food['pos'])))
+        p2a=np.sqrt(np.sum(np.square(self.agent['pos']-self.predator['pos'])))
+        punishment=1.0/(p2a+1.0)*-1.0
         reward=1.0/(a2f+1.0)*1.0
         self.score+=reward+punishment
 

@@ -56,11 +56,9 @@ class NeuralLearner(AbstractAgent):
         prediction = self.network.predict(history_batch)[0]
 
         best_action = self.legal_actions[np.argmax(prediction)]
-        random_action = random.choice(self.legal_actions)
-
-        action = select_with_probability([random_action, best_action], [self.epsilon, 1-self.epsilon])
-        #print "Step: %d, Epsilon: %f, Epoch: %d" % (self.step, EPSILON, epoch) What to do here?
-        return best_action
+        #random_action = random.choice(self.legal_actions)
+        random_action = self.legal_actions[np.random.choice(len(self.legal_actions))]
+        return np.random.choice([random_action, best_action], p=[self.epsilon, 1-self.epsilon])
 
     def _get_history(self, state):
         """ HACK!!!!! We are returning the same state 3 times. We should return the current + prev n states instead """
@@ -69,14 +67,14 @@ class NeuralLearner(AbstractAgent):
 
     """ Anneal the greedy factor epsilon and fix it at 0.1 thereafter"""
     def update_epsilon(self, step, total):
-        self.epsilon = max((float(total) - float(step))/float(total), 0.2)
+        self.epsilon = max((float(total) - float(step))/float(total), 0.1)
         self.step += 1
 
     """ Do the actual gradient descent part """
     def _gradient_descent(self):
         if self.states.length >= self.batch_size:
             x_batch, y_batch = self._get_random_minibatch()
-            self.network.fit(x_batch, y_batch, batch_size=self.batch_size, nb_epoch=1)
+            self.network.fit(x_batch, y_batch, batch_size=self.batch_size, nb_epoch=1, verbose=0)
 
     """ Converts -ve indices in ring buffer to +ve. Should probably be moved to ring buffer """
     def _transformed(self, index, bottom, length):
