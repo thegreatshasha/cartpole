@@ -25,7 +25,7 @@ class GameManager(BaseManager):
                 self.agent.update_epsilon(step+epoch*steps, epochs*steps)
                 if step%200==0:
                     print "Epsilon: %f, score: %f, step: %f"%(self.agent.epsilon, self.game.score, step)
-                    self.plotter.write(step/200, self.game.score)
+                    self.plotter.write((step+epoch*steps)/200, self.game.score)
                     self.game.score = 0
 
 
@@ -64,4 +64,4 @@ if __name__ == "__main__":
 
     """ Initialize manager and run experiment """
     manager = GameManager(game, na)
-    manager.run(epochs=10, steps=10000)
+    manager.run(epochs=10, steps=500)
