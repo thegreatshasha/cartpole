@@ -15,8 +15,8 @@ class NeuralLearner(AbstractAgent):
 
         """ Pass these all in to make them tweakable """
         self.history_length = 4
-        self.max_steps = 100
-        self.batch_size = 64
+        self.max_steps = 5700
+        self.batch_size = 128
         self.long_press_times = 1
         """ Disable this functionality initially """
 

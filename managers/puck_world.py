@@ -8,8 +8,14 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Convolution2D
 from keras.optimizers import SGD
+from ..helpers.plot import Plotter
 
 class GameManager(BaseManager):
+
+    def __init__(self, game, agent):
+        self.game = game
+        self.agent = agent
+        self.plotter = Plotter({'streaming_token': 'mxj0ox0hf8'})
 
     def run(self, epochs, steps):
         for epoch in xrange(epochs):
@@ -19,6 +25,7 @@ class GameManager(BaseManager):
                 self.agent.update_epsilon(step+epoch*steps, epochs*steps)
                 if step%200==0:
                     print "Epsilon: %f, score: %f, step: %f"%(self.agent.epsilon, self.game.score, step)
+                    self.plotter.write(step/200, self.game.score)
                     self.game.score = 0
 
 
@@ -57,4 +64,4 @@ if __name__ == "__main__":
 
     """ Initialize manager and run experiment """
     manager = GameManager(game, na)
-    manager.run(epochs=30, steps=500)
+    manager.run(epochs=10, steps=10000)
