@@ -14,8 +14,8 @@ class GameManager(BaseManager):
     def run(self, epochs, steps):
         for epoch in xrange(epochs):
             for step in xrange(steps):
-                self.update()
-                self.game.draw()
+                action=self.update()
+                self.game.draw(action)
                 self.agent.update_epsilon(step+epoch*steps, epochs*steps)
                 if step%200==0:
                     print "Epsilon: %f, score: %f, step: %f"%(self.agent.epsilon, self.game.score, step)

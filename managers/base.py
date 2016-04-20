@@ -34,6 +34,7 @@ class BaseManager:
         reward, terminal = self.long_press(action) # Execute that action
         next_state = self.game.get_state() # Get next state
         self.agent.update_Qvalue(prev_state, action, next_state, reward, terminal)
+        return action
 
     def visualize(self):
         raise NotImplementedError()
