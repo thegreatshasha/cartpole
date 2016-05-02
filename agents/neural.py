@@ -14,7 +14,7 @@ class NeuralLearner(AbstractAgent):
         self.network = network
 
         """ Pass these all in to make them tweakable """
-        self.history_length = 4
+        self.history_length = 1
         self.max_steps = 100
         self.batch_size = 64
         self.long_press_times = 1

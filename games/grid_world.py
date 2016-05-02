@@ -40,31 +40,61 @@ class GridWorld(AbstractGame):
         pass
 
     def act(self, action):
-        # Agent chooses the player's velocity
+        # agent actions:right,left,up,down
         actions={0:np.array([0,1]), 1:np.array([0,-1]), 2:np.array([1,0]), 3:np.array([-1,0]) }
-        gameover_reward=-10
-        survival_reward=-1
-        goal_reward=0
+        
+        #rewards 
+        gameover_reward=-10#teminal state 
+        survival_reward=-1#continue search
+        goal_reward=0#reached goal
+        
+        #erase previous position on board
         self.board[self.position[0]][self.position[1]]=0
+        
+        #calc new position
         self.position+=action      
-        #fall off the board or walk into obstacle 
-        import pdb;pdb.set_trace() 
-        if self.position[0]<0 or self.position[0]>self.board.shape[0] or self.position[1]<0 or \
-            self.position[1]>self.board.shape[1]:
-            self.score+=gameover_reward
+         
+        #if falls of board end game
+        if self.position[0] < 0 or self.position[0] >= self.board.shape[0] or self.position[1] < 0 or \
+            self.position[1] >= self.board.shape[1]:
+            self.score += gameover_reward
             return gameover_reward,True
-        #reach the goal
-        elif self.board[self.position[0]][self.position[1]]==3:
-            self.score+=goal_reward
+        
+        #reach the goal end game
+        elif self.board[self.position[0]][self.position[1]] == 3:
+            self.score += goal_reward
             return goal_reward,True
+        
         else:
-            if self.board[self.position[0]][self.position[1]]==1:
-                self.position-=action    
-            else:
-                self.board[self.position[0]][self.position[1]]=2
+            #walk into obstacle->nothing happens(i.e return to previous position)
+            if self.board[self.position[0]][self.position[1]] == 1:
+                self.position -= action     
+            
+            #mark the new positon on board
+            self.board[self.position[0]][self.position[1]]=2
 
             self.score+=survival_reward
             return survival_reward,False
+
+    def reset(self):
+        
+        #board created
+        self.board = np.array([[0, 1, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 3],
+            [0, 0, 0, 0, 1, 0]])
+        
+        #goal and agent position randomized
+        self.goal = np.array([np.random.randint(0,self.board.shape[0]),np.random.randint(0,self.board.shape[1])])
+        self.position = np.array([np.random.randint(0,self.board.shape[0]),np.random.randint(0,self.board.shape[1])])
+        
+        while self.goal[0] == self.position[0] and self.goal[1] == self.position[1]:
+            self.position = np.array([np.random.randint(0,self.board.shape[0]),np.random.randint(0,self.board.shape[1])])
+        
+        #agent and goal position marked
+        self.board[self.position[0]][self.position[1]] = 2
+        self.board[self.goal[0]][self.goal[1]] = 3
 
 if __name__ == "__main__":
     db = GridWorld(40, RandomAgent)
