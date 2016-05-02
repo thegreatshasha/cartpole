@@ -31,7 +31,7 @@ class BaseManager:
         """ Run a single update step """
         prev_state = self.game.get_state()
         action = self.agent.choose_action(prev_state) # Decide best action according to the agent
-        reward, terminal = self.long_press(action) # Execute that action
+        reward, terminal = self.game.act(action) # Execute that action
         next_state = self.game.get_state() # Get next state
         self.agent.update_Qvalue(prev_state, action, next_state, reward, terminal)
         return action

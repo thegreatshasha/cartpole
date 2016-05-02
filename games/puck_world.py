@@ -108,7 +108,7 @@ class PuckWorld(AbstractGame):
 
         #update agent vel
         action_legend = { 0 : np.array( [1.0,0.0] ), 1 : np.array( [-1.0,0.0] ), 2 : np.array( [0.0,1.0] ), 3 : np.array( [0.0,-1.0] ) }
-        action_constant=2
+        action_constant=2.0
         #print 'action is:%d'%action
         self.agent['vel'] = self.agent['vel'] + action_legend[action]*action_constant
         #print "agent vel:"
@@ -153,9 +153,9 @@ class PuckWorld(AbstractGame):
        #scoring
         reward,punishment=0.0,0.0
         p2a=np.sqrt(np.sum(np.square(predator_to_agent)))
-        #if p2a<self.predator['radius']:
-            #punishment=1.0/(p2a+1.0)*-1.0
-        a2f= p2a=np.sqrt(np.sum(np.square(self.agent['pos']-self.food['pos'])))
+        if p2a<self.predator['radius']:
+            punishment=1.0/(p2a+1.0)*-1000
+        a2f=np.sqrt(np.sum(np.square(self.agent['pos']-self.food['pos'])))
         reward=1.0/(a2f+1.0)*1.0
         self.score+=reward+punishment
 
