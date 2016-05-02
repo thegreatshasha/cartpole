@@ -39,8 +39,6 @@ class RingBuffer():
             data = np.vstack((self[i:self.length:], self[0:j:]))
         else:
             data = self[i:j:]
-        if data.shape[0] != 4:
-            import pdb; pdb.set_trace()
         return data
 
     def indexes(self):

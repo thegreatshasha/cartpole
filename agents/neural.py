@@ -64,8 +64,10 @@ class NeuralLearner(AbstractAgent):
 
     def _get_history(self, state):
         """ HACK!!!!! We are returning the same state 3 times. We should return the current + prev n states instead """
-        prev_frames = [state]*3
-        return np.array(prev_frames + [state])
+        """ URGENT FIX CAUSING TOO MANY BUGS """
+        #prev_frames = [state]*3
+        return [state]
+        #return np.array(prev_frames + [state])
 
     """ Anneal the greedy factor epsilon and fix it at 0.1 thereafter"""
     def update_epsilon(self, step, total):

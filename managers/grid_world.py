@@ -28,13 +28,13 @@ class GameManager(BaseManager):
             self.game.reset()
         next_state = self.game.get_state() # Get next state
         self.agent.update_Qvalue(prev_state, action, next_state, reward, terminal)
-        return action,terminal   
+        return action,terminal
 
-            
+
 
 
 if __name__ == "__main__":
-    
+
     """Create game to pass to game Manager"""
     board = np.array([[0, 1, 0, 0, 0, 0],
         [0, 1, 0, 0, 0, 0],
@@ -48,11 +48,11 @@ if __name__ == "__main__":
         position = np.array([np.random.randint(0,board.shape[0]),np.random.randint(0,board.shape[1])])
     board[position[0]][position[1]] = 2
     board[goal[0]][goal[1]] = 3
-    
+
     game = GridWorld({'board': board, 'position':position, 'goal':goal})
     legal_actions = game.getPossibleActions()
     st = game.get_state()
-    
+
     """ Initialize all 3 agents, random, Qagent and neural """
     #ra = RandomAgent(game.get_ranges())
     #ta = QAgent(game.get_ranges())
@@ -60,15 +60,16 @@ if __name__ == "__main__":
 
     """ Neural network for agent """
     net = Sequential()
-    
+
     """ Switch to dynamic dimension here """
-    # net.add(Convolution2D(8, 2, 2, subsample=(1,1), input_shape=(history_length, 4, 4)))
+    # net.add(Convolution2D(8, 2, 2, subsample=(1,1), input_shape=(history_length, 30)))
     # net.add(Activation('relu'))
-    # just modify network here
-    net.add(Flatten(input_shape=(history_length, 8)))
+    #just modify network here
+    #import pdb; pdb.set_trace()
+    net.add(Flatten(input_shape=(history_length, 30)))
     net.add(Dense(32))
-    net.add(Activation('relu'))
-    net.add(Dense(64))
+    # net.add(Activation('relu'))
+    # net.add(Dense(64))
     net.add(Activation('relu'))
     net.add(Dense(legal_actions.shape[0]))
     #rmsp = keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-6)
@@ -79,8 +80,9 @@ if __name__ == "__main__":
     """ Initialize all 3 agents, random, Qagent and neural """
     #ra = RandomAgent(game.get_ranges())
     #ta = QAgent(game.get_ranges())
+    #import pdb; pdb.set_trace()
     na = NeuralLearner(game.get_ranges(), net, st.shape)
 
     """ Initialize manager and run experiment """
     manager = GameManager(game, na)
-    manager.run(500)
+    manager.run(500000)
